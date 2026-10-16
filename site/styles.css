@@ -143,3 +143,28 @@
 
 /* Single-column updates after removing the workflow explainer. */
 .lower-grid{grid-template-columns:minmax(0,1fr)}
+
+/* Compact roadmap: reduce vertical space without shrinking task labels. */
+.gantt-row{min-height:80px}
+.phase-cell{padding-top:13px;padding-bottom:13px}
+.phase-bar{top:50%;height:36px;transform:translateY(-50%)}
+.gantt-task-row{min-height:54px}
+.task-cell{padding-top:8px;padding-bottom:8px}
+.task-bar{top:50%;height:27px;transform:translateY(-50%)}
+.task-bar.milestone{top:50%;transform:translateY(-50%) rotate(45deg)}
+@media screen and (min-width:1024px){
+  .gantt-row{min-height:88px}
+  .phase-cell{padding-top:12px;padding-bottom:12px}
+  .phase-bar{height:39px}
+  .gantt-task-row{min-height:60px}
+  .task-cell{padding-top:9px;padding-bottom:9px}
+  .task-bar{height:30px}
+}
+@media screen and (max-width:480px){
+  .gantt-row{min-height:70px}
+  .phase-cell{padding-top:9px;padding-bottom:9px}
+  .phase-bar{height:32px}
+  .gantt-task-row{min-height:50px}
+  .task-cell{padding-top:8px;padding-bottom:8px}
+  .task-bar{height:25px}
+}
