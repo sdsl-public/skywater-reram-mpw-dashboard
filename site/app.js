@@ -181,7 +181,9 @@
     return {end,days,position,months,ticks,todayPosition};
   }
   function gridMarkup(geo) {
-    return `<div class="gantt-grid">${geo.ticks.map(t=>`<i class="grid-line minor" style="left:${t.left}%"></i>`).join('')}${geo.months.map(m=>`<i class="grid-line" style="left:${m.left}%"></i>`).join('')}</div>${geo.todayPosition>=0&&geo.todayPosition<100?`<i class="today-line" style="left:${geo.todayPosition}%"></i>`:''}`;
+    // Use each month's actual width, including 28-, 29-, 30- and 31-day months.
+    const midMonth = geo.months.map(m=>`<i class="grid-line mid-month" style="left:${m.left+m.width/2}%" aria-hidden="true"></i>`).join('');
+    return `<div class="gantt-grid">${geo.ticks.map(t=>`<i class="grid-line minor" style="left:${t.left}%"></i>`).join('')}${geo.months.map(m=>`<i class="grid-line" style="left:${m.left}%"></i>`).join('')}${midMonth}</div>${geo.todayPosition>=0&&geo.todayPosition<100?`<i class="today-line" style="left:${geo.todayPosition}%"></i>`:''}`;
   }
   function spanGeometry(start,end,geo) {
     if (!start&&!end) return null;
