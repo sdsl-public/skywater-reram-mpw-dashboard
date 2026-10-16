@@ -145,13 +145,14 @@
 .lower-grid{grid-template-columns:minmax(0,1fr)}
 
 /* Dense roadmap: align labels and bars vertically with minimal whitespace. */
+/* Task row minimums include the two prior 1px-per-side padding reductions (4px total). */
 .gantt-row{min-height:58px}
 .phase-cell{padding-top:6px;padding-bottom:6px}
 .phase-cell-title{gap:2px}
 .phase-cell-title strong{line-height:1.24}
 .phase-cell-title small{line-height:1.24}
 .phase-bar{top:50%;height:30px;transform:translateY(-50%)}
-.gantt-task-row{min-height:40px}
+.gantt-task-row{min-height:36px}
 .task-cell{padding-top:3px;padding-bottom:3px}
 .task-cell strong{line-height:1.3}
 .task-bar{top:50%;height:23px;transform:translateY(-50%)}
@@ -160,7 +161,7 @@
   .gantt-row{min-height:60px}
   .phase-cell{padding-top:6px;padding-bottom:6px}
   .phase-bar{height:30px}
-  .gantt-task-row{min-height:42px}
+  .gantt-task-row{min-height:38px}
   .task-cell{padding-top:3px;padding-bottom:3px}
   .task-bar{height:25px}
 }
@@ -168,7 +169,7 @@
   .gantt-row{min-height:54px}
   .phase-cell{padding-top:5px;padding-bottom:5px}
   .phase-bar{height:28px}
-  .gantt-task-row{min-height:38px}
+  .gantt-task-row{min-height:34px}
   .task-cell{padding-top:2px;padding-bottom:2px}
   .task-bar{height:22px}
 }
