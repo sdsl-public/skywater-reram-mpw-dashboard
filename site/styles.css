@@ -132,3 +132,11 @@
   .range-options{gap:9px;flex-wrap:wrap}
   .scale-switch button{padding-left:9px;padding-right:9px}
 }
+
+/* The project roadmap is primary; the overall summary sits immediately below. */
+.workspace + .metrics{margin:36px 0 0}
+.metrics + .lower-grid{margin-top:32px}
+@media screen and (max-width:760px){
+  .workspace + .metrics{margin-top:28px}
+  .metrics + .lower-grid{margin-top:26px}
+}
