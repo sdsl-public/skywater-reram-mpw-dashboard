@@ -153,8 +153,6 @@
   }
   function renderDataStatus() {
     $('#demo-banner').hidden=!state.demo;
-    $('#demo-toggle').setAttribute('aria-pressed',String(state.demo));
-    $('#demo-toggle').innerHTML=(state.demo?'실제 현황 보기':'화면 예시 보기')+icon('arrow-right');
     const synced=Boolean(source.generated_at && source.source==='github-issues');
     $('#data-status').innerHTML=state.demo?'<span class="status-light"></span><span>EXAMPLE DATA · 실제 현황과 분리된 화면 예시</span>':`<span class="status-light ${synced?'synced':''}"></span><span>${synced?`GitHub Issues · 마지막 동기화 ${escape(timestampLabel(source.generated_at))}`:'등록된 실제 업무 없음 · 첫 데이터 동기화 대기'}</span>${source.warnings?.length?`<span title="입력 양식이 잘못된 일부 날짜는 미정으로 표시됩니다.">· 입력 확인 ${source.warnings.length}건</span>`:''}`;
   }
@@ -230,7 +228,7 @@
       }
       return html;
     }).join('');
-    $('#timeline-view').innerHTML=`<div class="gantt-scroll" tabindex="0" aria-label="일정표. 좌우로 스크롤하여 전체 기간을 볼 수 있습니다."><div class="gantt" data-scale="${state.scale}">${header}${rows}</div></div>${tasks().length===0?'<div class="gantt-bottom-note">아직 등록된 업무가 없습니다. 날짜와 진행률은 업무 등록 후 표시됩니다. <button type="button" data-demo-enable>화면 예시 보기 →</button></div>':''}`;
+    $('#timeline-view').innerHTML=`<div class="gantt-scroll" tabindex="0" aria-label="일정표. 좌우로 스크롤하여 전체 기간을 볼 수 있습니다."><div class="gantt" data-scale="${state.scale}">${header}${rows}</div></div>${tasks().length===0?'<div class="gantt-bottom-note">아직 등록된 업무가 없습니다. 날짜와 진행률은 업무 등록 후 표시됩니다.</div>':''}`;
     const allExpanded=phases.length>0&&phases.every(p=>state.expanded.has(p.id));
     $('#expand-all').innerHTML=icon('unfold')+`<span>${allExpanded?'전체 접기':'전체 펼치기'}</span>`;
     $('#expand-all').dataset.expanded=String(allExpanded);
@@ -282,7 +280,6 @@
     else if(target.dataset.task)openTask(target.dataset.task);
     else if(target.dataset.view){state.view=target.dataset.view;renderWorkspace();}
     else if(target.dataset.scale){state.scale=target.dataset.scale;state.start=state.scale==='full'?projectFirstMonth:clampStart(state.start);renderWorkspace();}
-    else if(target.hasAttribute('data-demo-enable'))setDemo(true);
     else if(target.classList.contains('dialog-close'))target.closest('dialog').close();
     else if(target.dataset.copyIssue){const link=`${repositoryUrl}/issues/${Number(target.dataset.copyIssue)}`;try{await navigator.clipboard.writeText(link);toast('Issue 링크를 복사했습니다.');}catch{toast('복사 권한이 없습니다. GitHub에서 링크를 복사해 주세요.');}}
   });
@@ -290,7 +287,6 @@
   $('#status-filter').addEventListener('change',event=>{state.status=event.target.value;renderWorkspace();});
   $('#owner-filter').addEventListener('change',event=>{state.owner=event.target.value;renderWorkspace();});
   $('#reset-filters').addEventListener('click',()=>{state.query='';state.status='all';state.owner='all';$('#search').value='';$('#status-filter').value='all';$('#owner-filter').value='all';renderWorkspace();});
-  $('#demo-toggle').addEventListener('click',()=>setDemo(!state.demo));
   $('#exit-demo').addEventListener('click',()=>setDemo(false));
   $('#previous-range').addEventListener('click',()=>{state.start=clampStart(monthStart(state.start,state.scale==='month'?-3:-1));renderWorkspace();});
   $('#next-range').addEventListener('click',()=>{state.start=clampStart(monthStart(state.start,state.scale==='month'?3:1));renderWorkspace();});

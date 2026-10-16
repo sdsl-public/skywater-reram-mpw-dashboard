@@ -172,3 +172,47 @@
   .task-cell{padding-top:4px;padding-bottom:4px}
   .task-bar{height:22px}
 }
+
+/* Timeline title, sync indicator and controls share a single compact row. */
+.timeline-header{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:nowrap;gap:20px;padding-bottom:16px;margin-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+.timeline-heading{flex:0 0 auto}
+.timeline-header h2{margin:0;line-height:1.3;white-space:nowrap}
+.timeline-header-controls{
+  display:flex;align-items:center;justify-content:flex-end;
+  flex:1 1 auto;min-width:0;gap:20px;
+}
+.timeline-sync-status{
+  display:flex;align-items:center;gap:8px;min-width:0;
+  color:var(--muted);font-size:12px;line-height:1.45;white-space:nowrap;
+}
+.timeline-sync-status .status-light{flex:0 0 auto}
+.timeline-sync-status > span:not(.status-light){
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.timeline-refresh{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;white-space:nowrap}
+.timeline-header #new-issue{flex:0 0 auto;white-space:nowrap}
+@media screen and (min-width:1024px){
+  .timeline-header{gap:24px}
+  .timeline-header-controls{gap:24px}
+  .timeline-sync-status{font-size:13px}
+}
+@media screen and (max-width:760px){
+  .timeline-header{gap:9px;padding-bottom:12px;margin-bottom:16px}
+  .timeline-header h2{font-size:21px}
+  .timeline-header-controls{gap:8px}
+  .timeline-sync-status{flex:1 1 auto;font-size:10px;min-width:0}
+  .timeline-refresh{width:30px;height:34px;justify-content:center;gap:0;padding:0}
+  .timeline-refresh .refresh-label{display:none}
+  .timeline-header #new-issue{font-size:10px;min-height:34px;padding:7px 10px;gap:5px}
+  .timeline-header #new-issue svg:last-child{display:none}
+}
+@media screen and (max-width:480px){
+  .timeline-header h2{font-size:20px}
+  .timeline-header-controls{gap:7px}
+  .timeline-sync-status{font-size:9px}
+  .timeline-header #new-issue{padding:7px 8px;font-size:10px}
+}
