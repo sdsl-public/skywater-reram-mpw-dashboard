@@ -9,7 +9,7 @@ window.DASHBOARD_CONFIG = Object.freeze({
   targetDate: null,
   projectUrl: null,
   phases: [
-    {id: '01', title: '기획·요구사항', en: 'Discovery & planning', color: '#c8e9a3', color2: '#86c3a1'},
+    {id: '01', title: '자료조사∙기획', en: 'Research & planning', color: '#c8e9a3', color2: '#86c3a1'},
     {id: '02', title: 'PDK·설계 환경', en: 'PDK & design environment', color: '#a9ddae', color2: '#70bfb5'},
     {id: '03', title: '회로·어레이 설계', en: 'Circuit & array design', color: '#84d2ba', color2: '#669cac'},
     {id: '04', title: '레이아웃·검증', en: 'Layout & verification', color: '#89c7bb', color2: '#7e9bb0'},
