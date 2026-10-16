@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=modern-legend-1">
   <link rel="stylesheet" href="./deliverables.css?v=1">
   <script defer src="./config.js"></script>
   <script defer src="./data.js"></script>
@@ -48,7 +48,15 @@
     <div id="timeline-view" class="view-panel" aria-label="프로젝트 타임라인"></div>
     <div id="list-view" class="view-panel" aria-label="업무 목록" hidden></div>
     <div id="board-view" class="view-panel" aria-label="상태별 칸반 보드" hidden></div>
-    <div class="workspace-footer"><div class="legend"><span><i class="legend-dot planned"></i>대기</span><span><i class="legend-dot in-progress"></i>진행 중</span><span><i class="legend-dot review"></i>검토 중</span><span><i class="legend-dot blocked"></i>보류</span><span><i class="legend-dot done"></i>완료</span></div><span class="muted">모든 날짜는 KST · 바를 클릭하면 업무 상세</span></div>
+    <div class="workspace-footer">
+      <div class="legend" role="group" aria-label="업무 상태 범례">
+        <span><i class="legend-dot planned" aria-hidden="true"></i>대기</span>
+        <span><i class="legend-dot in-progress" aria-hidden="true"></i>진행 중</span>
+        <span><i class="legend-dot review" aria-hidden="true"></i>검토 중</span>
+        <span><i class="legend-dot blocked" aria-hidden="true"></i>보류</span>
+        <span><i class="legend-dot done" aria-hidden="true"></i>완료</span>
+      </div>
+    </div>
   </section>
   <section class="metrics" id="metrics" aria-label="프로젝트 전체 현황"></section>
   <section class="lower-grid"><div class="updates-panel"><div class="panel-heading"><h2>최근 업무 업데이트</h2><span class="eyebrow">LATEST ACTIVITY</span></div><div id="recent-updates"></div></div></section>

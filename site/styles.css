@@ -110,8 +110,8 @@
   .empty-state h3{font-size:24px}
   .empty-state p,.no-results{font-size:15px}
   #task-dialog{width:610px;padding:34px}
-  #dialog-title{font-size:32px}
   .dialog-summary,.detail-grid dd,.detail-progress>div:first-child,.check-item{font-size:16px;line-height:1.8}
+  #dialog-title{font-size:32px}
   .detail-grid dt,.detail-progress small,.dialog-updated{font-size:13px}
   .phase-chip,.detail-demo-notice{font-size:14px}
   .detail-checklist h3{font-size:16px}
@@ -221,3 +221,36 @@
 /* Calendar guides: a subtle monthly midpoint and date labels near their ticks. */
 .grid-line.mid-month{border-left:1px dashed rgba(255,255,255,0.08)}
 .gantt-tick{justify-content:flex-start;padding-left:4px;padding-right:0;text-align:left}
+
+/* Approved modern status palette; shared by the legend and status indicators. */
+:root{
+  --status-planned:#9CA3AF;
+  --status-in-progress:#84CC16;
+  --status-review:#60A5FA;
+  --status-blocked:#FB923C;
+  --status-done:#34D399;
+  --status-done-border:#047857;
+}
+.planned{color:var(--status-planned)}
+.in-progress{color:var(--status-in-progress)}
+.review{color:var(--status-review)}
+.blocked{color:var(--status-blocked)}
+.done{color:var(--status-done)}
+.workspace-footer{justify-content:flex-start;padding:12px 0 10px}
+.workspace-footer .legend{
+  display:flex;align-items:center;flex-wrap:wrap;gap:12px 24px;
+  font-size:14px;font-weight:500;line-height:1.5;color:#D9DED8;
+}
+.workspace-footer .legend > span{
+  display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+}
+.workspace-footer .legend-dot{
+  display:inline-block;width:8px;height:8px;flex:0 0 8px;
+  border-radius:50%;background:currentColor;
+}
+.workspace-footer .legend-dot.done{
+  box-shadow:0 0 0 2px var(--status-done-border);
+}
+@media screen and (max-width:480px){
+  .workspace-footer .legend{column-gap:16px;row-gap:10px}
+}
