@@ -1,24 +1,34 @@
 #!/usr/bin/env python3
-"""Build only the explicitly allowed static assets; never upload the repository root."""
+"""Build only explicitly allowed public files, including six approved phase icons."""
 from pathlib import Path
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSETS = ("index.html", "styles.css", "theme.css", "app.js", "config.js", "data.js", "favicon.svg", ".nojekyll")
+ASSETS = (
+    "index.html", "styles.css", "theme.css", "app.js", "config.js", "data.js",
+    "favicon.svg", ".nojekyll", "deliverables.js", "deliverables.css",
+) + tuple(f"assets/timeline-icons/{number:02d}.webp" for number in range(1, 7))
 
 def main() -> None:
+    source = ROOT / "site"
     destination = ROOT / "_site"
     for name in ASSETS:
-        path = ROOT / "site" / name
-        if not path.is_file() or path.is_symlink():
+        path = source / name
+        if not path.is_file() or any(p.is_symlink() for p in (path, *path.parents)):
             raise RuntimeError(f"Missing or unsafe asset: {name}")
+        if path.suffix == '.webp':
+            data = path.read_bytes()
+            if data[:4] != b'RIFF' or data[8:12] != b'WEBP':
+                raise RuntimeError(f"Invalid image asset: {name}")
     if destination.exists():
         if destination.is_symlink():
             raise RuntimeError("Refusing to remove a symlinked output directory")
         shutil.rmtree(destination)
     destination.mkdir()
     for name in ASSETS:
-        shutil.copy2(ROOT / "site" / name, destination / name)
+        target = destination / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source / name, target)
     print(f"Built {len(ASSETS)} allowlisted files in {destination.name}/")
 
 if __name__ == "__main__":
