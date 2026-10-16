@@ -1,0 +1,32 @@
+name: Initialize dashboard label
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/initialize-dashboard-label.yml'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  create-label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ensure dashboard label exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh api "repos/${GH_REPO}/labels/dashboard" >/dev/null 2>&1; then
+            echo "Existing dashboard label confirmed."
+          else
+            gh api -X POST "repos/${GH_REPO}/labels" \
+              -f name='dashboard' \
+              -f color='A8D5B5' \
+              -f description='Approved for the public SkyWater ReRAM MPW project dashboard'
+            echo "Created dashboard label."
+          fi
+          gh api "repos/${GH_REPO}/labels/dashboard" --jq '{name,color,description,url}'
