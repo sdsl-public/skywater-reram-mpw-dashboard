@@ -1,0 +1,91 @@
+name: Publish public dashboard
+
+on:
+  push:
+    branches: [main]
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled, assigned, unassigned, deleted, transferred, milestoned, demilestoned]
+  milestone:
+    types: [edited, deleted]
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - name: Check out the trusted default branch
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Test the exporter and validate JavaScript
+        run: |
+          python3 -m unittest discover -s tests -v
+          node --check site/app.js
+          node --check site/config.js
+      - name: Export approved public Issues
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python3 scripts/export_issues.py --output site/data.js
+      - name: Build only public site assets
+        run: python3 scripts/build.py
+      - name: Upload the public site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify public page and assets
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python3 - <<'PY'
+          import os, time, urllib.request
+          base = os.environ['PAGE_URL'].rstrip('/') + '/'
+          expected = {'': 'FROM CONCEPT TO SILICON', 'styles.css': 'Urbanist', 'app.js': 'renderTimeline', 'data.js': 'github-issues'}
+          for name, marker in expected.items():
+              for attempt in range(6):
+                  try:
+                      req = urllib.request.Request(base + name, headers={'Cache-Control': 'no-cache'})
+                      with urllib.request.urlopen(req, timeout=30) as response:
+                          body = response.read().decode('utf-8')
+                          if response.status != 200 or marker not in body:
+                              raise RuntimeError('Unexpected page content')
+                      print('Verified HTTP 200 and content:', name or 'index.html')
+                      break
+                  except Exception:
+                      if attempt == 5:
+                          raise
+                      time.sleep(5)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+              f.write('## Dashboard deployed\n\n' + base + '\n\nHTML, styles, JavaScript and public Issue snapshot verified.\n')
+          PY

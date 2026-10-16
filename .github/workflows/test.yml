@@ -1,0 +1,19 @@
+name: Validate dashboard changes
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - run: |
+          python3 -m unittest discover -s tests -v
+          node --check site/app.js
+          node --check site/config.js
+          python3 scripts/build.py

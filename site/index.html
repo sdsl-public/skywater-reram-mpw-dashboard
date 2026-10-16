@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a0b0b">
+  <meta name="description" content="SkyWater ReRAM MPW 연구 프로젝트의 공개 일정과 업무 진행 현황. GitHub Issues 기반의 읽기 전용 현황판입니다.">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'none'; form-action https://github.com; frame-src 'none'">
+  <title>SkyWater ReRAM MPW · Project dashboard</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./config.js"></script>
+  <script defer src="./data.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#workspace">본문으로 이동</a>
+<header class="site-header">
+  <a class="brand" href="./" aria-label="현황판 처음으로"><span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="7" y="7" width="18" height="18" rx="3"/><path d="M12 12h8v8h-8zM11 3v4m10-4v4M11 25v4m10-4v4M3 11h4m-4 10h4m18-10h4m-4 10h4"/></svg></span><span>SDSL<span class="brand-slash"> / </span><span class="brand-sub">PROJECT JOURNAL</span></span></a>
+  <div class="header-right"><span class="public-badge"><span class="small-dot"></span>PUBLIC / READ ONLY</span><a class="text-link github-link" data-repo-link href="https://github.com/sdsl-public/skywater-reram-mpw-dashboard" target="_blank" rel="noopener noreferrer"><span data-icon="github"></span>GitHub<span data-icon="arrow-up-right"></span></a></div>
+</header>
+<main class="page-shell">
+  <section class="hero" aria-labelledby="project-title">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <p class="hero-kicker"><span class="small-dot"></span> FROM CONCEPT TO SILICON</p>
+    <h1 id="project-title"><span>SkyWater</span><span class="gradient-text">ReRAM MPW</span></h1>
+    <p class="hero-description">아이디어에서 실리콘까지, 함께 만드는 연구의 여정.</p>
+    <p class="hero-subtitle">설계부터 제작, 측정까지. 프로젝트의 모든 단계를 한눈에.</p>
+    <a class="hero-anchor" href="#workspace">Explore the roadmap <span data-icon="arrow-right"></span></a>
+  </section>
+  <div class="data-strip"><div id="data-status" role="status"></div><div class="data-strip-actions"><button id="refresh" class="quiet-button" type="button"><span data-icon="refresh"></span>새로고침</button><button id="demo-toggle" class="demo-toggle" type="button" aria-pressed="false">화면 예시 보기<span data-icon="arrow-right"></span></button></div></div>
+  <div id="demo-banner" class="demo-banner" hidden><span data-icon="info"></span><div><strong>화면 예시 모드</strong><span>아래 업무·날짜·진행률은 디자인 확인용 가상 데이터입니다. 실제 MPW 일정이 아닙니다.</span></div><button id="exit-demo" type="button">실제 현황으로</button></div>
+  <section class="metrics" id="metrics" aria-label="프로젝트 전체 현황"></section>
+  <section class="workspace" id="workspace" aria-labelledby="workspace-title">
+    <div class="section-top"><div><div class="eyebrow">THE ROAD TO SILICON</div><h2 id="workspace-title">프로젝트 로드맵<span class="heading-tag">01 — 06</span></h2></div><a class="button button-primary" id="new-issue" href="https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/new?template=task.yml" target="_blank" rel="noopener noreferrer"><span data-icon="plus"></span>업무 등록<span data-icon="arrow-up-right"></span></a></div>
+    <div class="workspace-toolbar"><div class="view-switch" role="group" aria-label="보기 방식"><button data-view="timeline" aria-pressed="true" type="button"><span data-icon="gantt"></span>타임라인</button><button data-view="list" aria-pressed="false" type="button"><span data-icon="list"></span>업무 목록</button><button data-view="board" aria-pressed="false" type="button"><span data-icon="columns"></span>칸반 보드</button></div><div class="filter-row"><label class="search-box"><span data-icon="search"></span><input id="search" type="search" placeholder="업무 검색" autocomplete="off" aria-label="업무 이름 또는 요약 검색"><kbd>/</kbd></label><label class="sr-only" for="status-filter">상태 필터</label><select id="status-filter"><option value="all">모든 상태</option><option value="planned">대기</option><option value="in-progress">진행 중</option><option value="review">검토 중</option><option value="blocked">보류</option><option value="done">완료</option><option value="cancelled">취소</option><option value="overdue">기한 초과</option></select><label class="sr-only" for="owner-filter">담당자 필터</label><select id="owner-filter"><option value="all">모든 담당자</option></select></div></div>
+    <div class="timeline-controls" id="timeline-controls"><div class="range-controls"><button id="previous-range" class="icon-button" aria-label="이전 기간" type="button"><span data-icon="chevron-left"></span></button><span id="range-label"></span><button id="next-range" class="icon-button" aria-label="다음 기간" type="button"><span data-icon="chevron-right"></span></button><button id="today-button" class="small-button" type="button">오늘</button></div><div class="range-options"><span id="filtered-count" class="muted"></span><button id="expand-all" class="quiet-button" type="button"><span data-icon="unfold"></span><span>전체 펼치기</span></button><div class="scale-switch" role="group" aria-label="타임라인 배율"><button data-scale="month" aria-pressed="true" type="button">월</button><button data-scale="week" aria-pressed="false" type="button">주</button></div></div></div>
+    <div id="no-results" class="no-results" hidden><span data-icon="search"></span><strong>조건에 맞는 업무가 없습니다.</strong><button id="reset-filters" class="small-button" type="button">필터 초기화</button></div>
+    <div id="timeline-view" class="view-panel" aria-label="프로젝트 타임라인"></div>
+    <div id="list-view" class="view-panel" aria-label="업무 목록" hidden></div>
+    <div id="board-view" class="view-panel" aria-label="상태별 칸반 보드" hidden></div>
+    <div class="workspace-footer"><div class="legend"><span><i class="legend-dot planned"></i>대기</span><span><i class="legend-dot in-progress"></i>진행 중</span><span><i class="legend-dot review"></i>검토 중</span><span><i class="legend-dot blocked"></i>보류</span><span><i class="legend-dot done"></i>완료</span></div><span class="muted">모든 날짜는 KST · 바를 클릭하면 업무 상세</span></div>
+  </section>
+  <section class="lower-grid"><div class="updates-panel"><div class="panel-heading"><h2>최근 업무 업데이트</h2><span class="eyebrow">LATEST ACTIVITY</span></div><div id="recent-updates"></div></div><div class="workflow-panel"><div class="panel-heading"><h2>업무는 GitHub에서.</h2><span data-icon="arrow-up-right"></span></div><p>한 곳에서 기록하고, 모두가 같은 현황을 봅니다.</p><div class="workflow-steps"><span><b>01</b>Issue 작성</span><i>→</i><span><b>02</b>공개 라벨 승인</span><i>→</i><span><b>03</b>현황판 갱신</span></div><div class="workflow-bottom"><span><code>dashboard</code> 라벨이 붙은 업무를 표시합니다.</span><button id="help-button" type="button" class="text-link">사용 안내<span data-icon="arrow-right"></span></button></div></div></section>
+  <p class="public-notice"><span data-icon="globe"></span>이 저장소와 모든 Issue는 공개됩니다. PDK, 비공개 회로도, 미공개 연구자료, 접근 토큰은 업로드하지 마세요.</p>
+</main>
+<footer class="site-footer"><span>SDSL <span class="brand-slash">/</span> SkyWater ReRAM MPW</span><span>독립 연구 프로젝트 현황판 · SkyWater 공식 웹사이트가 아닙니다.</span><a data-repo-link href="https://github.com/sdsl-public/skywater-reram-mpw-dashboard" target="_blank" rel="noopener noreferrer">Built with GitHub<span data-icon="arrow-up-right"></span></a></footer>
+<dialog id="task-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span class="eyebrow" id="dialog-kicker">TASK DETAIL</span><button class="icon-button dialog-close" type="button" aria-label="상세 패널 닫기"><span data-icon="x"></span></button></div><div id="dialog-content"></div></dialog>
+<dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-top"><span class="eyebrow">HOW IT WORKS</span><button class="icon-button dialog-close" type="button" aria-label="사용 안내 닫기"><span data-icon="x"></span></button></div><div class="help-content"><h2 id="help-title">업무 등록부터 공개까지</h2><p>이 페이지는 읽기 전용입니다. 내용 변경은 GitHub에서 로그인한 뒤 진행합니다.</p><h3>1. 업무 등록</h3><p>상단 ‘업무 등록’ 버튼으로 Issue 양식을 열고 단계, 상태, 시작일, 종료일, 공개 요약을 입력하세요. 날짜를 모르면 비워두면 됩니다.</p><h3>2. 공개 현황판에 반영</h3><p>관리자가 Issue에 <code>dashboard</code> 라벨을 추가하면 배포 워크플로가 데이터를 다시 생성합니다. 라벨은 현황판 표시 여부만 제어하며, Issue 자체를 비공개로 만들지는 않습니다.</p><h3>3. 담당자·상태·진행률 변경</h3><p>담당자는 Issue의 Assignees, 상태와 일정은 본문의 양식 항목에서 수정합니다. 진행률을 비우면 체크리스트 완료 비율을 사용합니다. 완료된 업무는 Issue를 ‘Completed’로 닫으세요. ‘Not planned’로 닫힌 업무는 취소로 처리합니다.</p><h3>GitHub Projects 사용 시</h3><p>동일 Issue를 Projects에 추가해 관리할 수 있습니다. 이 현황판은 Issue 본문·상태·담당자를 읽습니다. Projects의 독립적인 날짜·상태 필드와는 자동 동기화하지 않습니다.</p><h3>갱신 시점</h3><p>Issue 변경 이후 Actions 배포가 성공하면 새 데이터가 공개됩니다. ‘새로고침’은 배포된 최신 페이지를 다시 불러옵니다. 이 화면에서 배포를 직접 실행하지는 않습니다.</p><div class="help-warning">공개 저장소에는 비공개 연구자료를 넣지 마세요. 공개 라벨을 제거해도 기존 Issue·커밋·캐시는 사라지지 않습니다.</div></div></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+<noscript><div class="noscript">현황판을 보려면 JavaScript를 활성화해 주세요. 업무 원본은 GitHub 저장소의 Issues에서 확인할 수 있습니다.</div></noscript>
+</body>
+</html>

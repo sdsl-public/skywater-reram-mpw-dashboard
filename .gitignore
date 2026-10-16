@@ -1,0 +1,9 @@
+_site/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+.venv/
+node_modules/
+test-results/

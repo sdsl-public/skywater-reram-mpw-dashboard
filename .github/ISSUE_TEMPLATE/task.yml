@@ -1,0 +1,87 @@
+name: 프로젝트 업무
+description: 연구 단계, 일정, 상태와 공개 요약을 등록합니다.
+title: "[TASK] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 공개 프로젝트 업무
+        이 저장소와 모든 Issue는 공개됩니다. **PDK, 비공개 회로도, 미공개 결과, 비밀번호·토큰은 작성하지 마세요.**
+        제출 후 관리자가 `dashboard` 라벨을 추가하면 공개 현황판에 반영됩니다.
+        날짜를 모르면 비워 두세요. 담당자는 등록 후 Assignees에서 지정하세요.
+  - type: dropdown
+    id: phase
+    attributes:
+      label: 연구 단계
+      options:
+        - 01 · 기획·요구사항
+        - 02 · PDK·설계 환경
+        - 03 · 회로·어레이 설계
+        - 04 · 레이아웃·검증
+        - 05 · 테이프아웃·제작
+        - 06 · 측정·결과 분석
+        - 00 · 미분류
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 업무 유형
+      options:
+        - task / 일반 업무
+        - milestone / 마일스톤
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: 진행 상태
+      options:
+        - planned / 대기
+        - in-progress / 진행 중
+        - review / 검토 중
+        - blocked / 보류
+    validations:
+      required: true
+  - type: input
+    id: start
+    attributes:
+      label: 시작일
+      description: YYYY-MM-DD 형식. 미정이면 비워 두세요.
+      placeholder: YYYY-MM-DD
+  - type: input
+    id: end
+    attributes:
+      label: 종료일
+      description: YYYY-MM-DD 형식. 마일스톤은 종료일만 입력해도 됩니다.
+      placeholder: YYYY-MM-DD
+  - type: input
+    id: progress
+    attributes:
+      label: 진행률
+      description: 0~100 정수. 비워 두면 체크리스트로 계산합니다. 완료는 Issue를 Completed로 닫으세요.
+      placeholder: "예: 40"
+  - type: textarea
+    id: summary
+    attributes:
+      label: 공개 요약
+      description: 민감한 내용과 비공개 자료 링크를 넣지 마세요.
+      placeholder: 수행할 업무, 검토할 항목, 기대하는 산출물 등을 간략히 작성합니다.
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: 체크리스트
+      description: 완료한 항목은 [x]로 표시합니다.
+      value: |
+        - [ ] 입력 자료 및 요구사항 정리
+        - [ ] 업무 수행
+        - [ ] 결과 검토
+  - type: checkboxes
+    id: public-check
+    attributes:
+      label: 공개 확인
+      options:
+        - label: 공개 가능한 정보만 작성했으며, 비공개 자료나 자격 증명을 포함하지 않았습니다.
+          required: true
