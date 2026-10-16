@@ -14,6 +14,14 @@
 4. 완료는 Completed로 닫고, 취소는 Not planned로 닫습니다.
 5. Issue 변경 또는 main 업데이트 후 `Publish public dashboard`가 새 스냅샷을 배포합니다. 6시간 간격 및 수동 실행도 지원합니다.
 
+## 프로젝트 기간과 보기
+
+프로젝트 전체 기간은 **2026년 10월 1일 ~ 2027년 9월 30일**입니다. `site/config.js`의 `projectStart`, `projectEnd`에서 관리합니다. 시작일보다 앞선 종료일은 오류로 처리합니다.
+
+기본 타임라인은 전체 12개월을 표시합니다. `전체`는 전체 기간, `월`은 6개월 확대, `주`는 3개월 확대 보기입니다. 이전·다음 이동은 프로젝트 기간 안으로 제한되며, `오늘`은 해당 날짜가 보이도록 이동합니다. 실제 Issue에 입력한 날짜와 진행률은 프로젝트 기간 설정 변경으로 수정하지 않습니다. 예시 일정만 명시된 프로젝트 기간에 맞춰 배치됩니다.
+
+PC 화면에서는 단계 제목 18px, 업무 이름 15~16px, 주요 버튼·날짜 14~16px, 상세 본문 16px로 표시합니다. 글자 크기와 함께 행 높이, 버튼, 행간과 텍스트 대비를 조정했습니다. 모바일은 기존 반응형 구성을 유지하며 일정표 내부에서 가로로 스크롤할 수 있습니다.
+
 ## 화면
 
 Amplect의 타임라인 스타일에서 영감을 얻어 독립적으로 구현했습니다. 중앙 정렬의 큰 제목, 가벼운 글꼴, 어두운 바탕, 민트·블루 그라데이션과 가는 구분선을 사용합니다. 영문은 Urbanist, 한글은 Noto Sans KR을 Google Fonts에서 불러오며, 네트워크가 차단되면 시스템 글꼴로 대체합니다. 원본 사이트의 독점 폰트 파일이나 코드를 복제하지 않았습니다.
@@ -22,7 +30,7 @@ Amplect의 타임라인 스타일에서 영감을 얻어 독립적으로 구현�
 
 ## 배포
 
-Settings → Pages → Source를 GitHub Actions로 설정합니다. `.github/workflows/pages.yml`은 검증 후 `site/`의 허용된 7개 파일만 빌드해 배포합니다. GitHub Projects의 별도 날짜·상태 필드는 자동으로 읽지 않습니다.
+Settings → Pages → Source를 GitHub Actions로 설정합니다. `.github/workflows/pages.yml`은 검증 후 `site/`의 허용된 8개 파일만 빌드해 배포합니다. 기존 시각 테마는 `theme.css`, 가독성 조정은 `styles.css`에 분리되어 있습니다. GitHub Projects의 별도 날짜·상태 필드는 자동으로 읽지 않습니다.
 
 ```sh
 python3 -m unittest discover -s tests -v

@@ -4,7 +4,7 @@ from pathlib import Path
 import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSETS = ("index.html", "styles.css", "app.js", "config.js", "data.js", "favicon.svg", ".nojekyll")
+ASSETS = ("index.html", "styles.css", "theme.css", "app.js", "config.js", "data.js", "favicon.svg", ".nojekyll")
 
 def main() -> None:
     destination = ROOT / "_site"

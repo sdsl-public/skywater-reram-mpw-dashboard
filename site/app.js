@@ -63,6 +63,21 @@
     return parseDay(`${get('year')}-${get('month')}-${get('day')}`);
   }
   const today = todayDate();
+  const projectStart = parseDay(config.projectStart);
+  const projectEnd = parseDay(config.projectEnd);
+  if (!projectStart || !projectEnd || projectEnd < projectStart) {
+    throw new Error('Project dates must be valid and the end must not precede the start.');
+  }
+  const projectFirstMonth = monthStart(projectStart);
+  const projectEndExclusive = monthStart(projectEnd, 1);
+  const projectMonths = (projectEnd.getUTCFullYear()-projectStart.getUTCFullYear())*12 + projectEnd.getUTCMonth()-projectStart.getUTCMonth()+1;
+  const projectDays = (projectEnd-projectStart)/DAY+1;
+  const monthLabel = date => `${date.getUTCFullYear()}.${String(date.getUTCMonth()+1).padStart(2,'0')}`;
+  const visibleMonths = () => state.scale === 'full' ? projectMonths : Math.min(projectMonths, state.scale === 'month' ? 6 : 3);
+  function clampStart(date) {
+    const latest = monthStart(projectEndExclusive, -visibleMonths());
+    return new Date(Math.max(+projectFirstMonth, Math.min(+latest, +monthStart(date))));
+  }
   const phaseById = id => config.phases.find(p => p.id === id) || config.phases.find(p => p.id === '00');
   const dateLabel = (value, short=false) => {const d=parseDay(value); return d ? (short ? `${String(d.getUTCMonth()+1).padStart(2,'0')}.${String(d.getUTCDate()).padStart(2,'0')}` : value.replaceAll('-','.')) : '미정';};
   function timestampLabel(value) {
@@ -88,7 +103,9 @@
   }
   const realTasks = Array.isArray(source.tasks) ? source.tasks.map(normalizeTask) : [];
   function makeDemo() {
-    const base=monthStart(today);
+    const base=projectStart;
+    // Scale only the explicitly labelled fictional examples across the project window.
+    const demoOffset = day => Math.round(day/181*(projectDays-1));
     const rows=[
       ['01','연구 목표·칩 요구사항 정리',0,7,'done',100],
       ['01','어레이·평가 항목 정의',4,14,'done',100],
@@ -109,10 +126,10 @@
       ['06','신뢰성·어레이 특성 분석',166,179,'planned',0],
       ['06','연구 결과 정리',177,181,'planned',0,'milestone']
     ];
-    return rows.map((r,i)=>normalizeTask({id:`demo-${i}`,title:r[1],phase:r[0],start:dayKey(addDays(base,r[2])),end:dayKey(addDays(base,r[3])),status:r[4],progress:r[5],kind:r[6]||'task',assignees:[`sample-${['a','b','c'][i%3]}`],summary:'화면 구성 확인을 위한 예시 업무입니다. 담당자·날짜·진행률은 가상 값이며, 실제 프로젝트 일정이나 공정 제공사의 확정 일정이 아닙니다.',checklist:[{text:'요구사항 및 입력 자료 정리',done:r[5]>=40},{text:'설계·분석 수행',done:r[5]>=80},{text:'결과 검토 및 다음 단계 공유',done:r[5]===100}],updated_at:new Date(+today-(i+1)*3600000).toISOString()}));
+    return rows.map((r,i)=>normalizeTask({id:`demo-${i}`,title:r[1],phase:r[0],start:dayKey(addDays(base,demoOffset(r[2]))),end:dayKey(addDays(base,demoOffset(r[3]))),status:r[4],progress:r[5],kind:r[6]||'task',assignees:[`sample-${['a','b','c'][i%3]}`],summary:'화면 구성 확인을 위한 예시 업무입니다. 담당자·날짜·진행률은 가상 값이며, 실제 프로젝트 일정이나 공정 제공사의 확정 일정이 아닙니다.',checklist:[{text:'요구사항 및 입력 자료 정리',done:r[5]>=40},{text:'설계·분석 수행',done:r[5]>=80},{text:'결과 검토 및 다음 단계 공유',done:r[5]===100}],updated_at:new Date(+today-(i+1)*3600000).toISOString()}));
   }
   const demoTasks=makeDemo();
-  const state={demo:new URLSearchParams(location.search).get('demo')==='1'||window.DASHBOARD_PREVIEW===true,view:'timeline',scale:'month',start:monthStart(today),expanded:new Set(),query:'',status:'all',owner:'all',sort:'phase'};
+  const state={demo:new URLSearchParams(location.search).get('demo')==='1'||window.DASHBOARD_PREVIEW===true,view:'timeline',scale:'full',start:projectFirstMonth,expanded:new Set(),query:'',status:'all',owner:'all',sort:'phase'};
   const tasks=()=>state.demo?demoTasks:realTasks;
   const isActive = task => task.status!=='cancelled';
   const isOverdue = task => isActive(task) && task.status!=='done' && task.end && parseDay(task.end)<today;
@@ -148,12 +165,20 @@
     $('#owner-filter').value=state.owner;
   }
   function timeGeometry() {
-    const count=state.scale==='month'?6:3,end=monthStart(state.start,count),days=(end-state.start)/DAY;
+    const count=visibleMonths(),end=monthStart(state.start,count),days=(end-state.start)/DAY;
     const position=value=>100*(parseDay(value)-state.start)/DAY/days;
     const months=[];
     for(let n=0;n<count;n++){const d=monthStart(state.start,n),next=monthStart(state.start,n+1);months.push({date:d,left:100*(d-state.start)/DAY/days,width:100*(next-d)/DAY/days});}
     const ticks=[];
-    for(let day=0;day<days;day+=7){const d=addDays(state.start,day);ticks.push({left:day/days*100,width:Math.min(7,days-day)/days*100,label:state.scale==='week'?`${d.getUTCMonth()+1}/${d.getUTCDate()}`:String(d.getUTCDate()).padStart(2,'0')});}
+    if(state.scale==='full'){
+      // Two legible date ticks per month, rather than 53 crowded weekly labels.
+      for(const m of months){
+        const length=(monthStart(m.date,1)-m.date)/DAY;
+        for(const day of [0,14])ticks.push({left:m.left+day/days*100,width:(day===0?14:length-14)/days*100,label:day===0?'01':'15'});
+      }
+    } else {
+      for(let day=0;day<days;day+=7){const d=addDays(state.start,day);ticks.push({left:day/days*100,width:Math.min(7,days-day)/days*100,label:state.scale==='week'?`${d.getUTCMonth()+1}/${d.getUTCDate()}`:String(d.getUTCDate()).padStart(2,'0')});}
+    }
     const todayPosition=position(dayKey(today));
     return {end,days,position,months,ticks,todayPosition};
   }
@@ -187,7 +212,9 @@
   function renderTimeline(list) {
     const geo=timeGeometry();
     const end=addDays(geo.end,-1);
-    $('#range-label').textContent=`${state.start.getUTCFullYear()}.${String(state.start.getUTCMonth()+1).padStart(2,'0')} — ${end.getUTCFullYear()}.${String(end.getUTCMonth()+1).padStart(2,'0')}`;
+    $('#range-label').textContent=`${monthLabel(state.start)} — ${monthLabel(end)}`;
+    $('#previous-range').disabled=+state.start<=+projectFirstMonth;
+    $('#next-range').disabled=+geo.end>=+projectEndExclusive;
     const phases=config.phases.filter(p => list.some(t=>t.phase===p.id) || (!hasFilters()&&p.id!=='00'));
     const todayHead=geo.todayPosition>=0&&geo.todayPosition<100?`<div class="today-head" style="left:${geo.todayPosition}%"><b>TODAY</b></div>`:'';
     const header=`<div class="gantt-head"><div class="gantt-label-header"><span>연구 단계 / 세부 업무</span><span>WORKSTREAM</span></div><div class="gantt-dates"><div class="gantt-months">${geo.months.map(m=>`<span class="gantt-month" style="left:${m.left}%;width:${m.width}%">${m.date.getUTCFullYear()}.${String(m.date.getUTCMonth()+1).padStart(2,'0')}</span>`).join('')}</div><div class="gantt-ticks">${geo.ticks.map(t=>`<span class="gantt-tick" style="left:${t.left}%;width:${t.width}%">${t.label}</span>`).join('')}</div>${todayHead}</div></div>`;
@@ -203,7 +230,7 @@
       }
       return html;
     }).join('');
-    $('#timeline-view').innerHTML=`<div class="gantt-scroll" tabindex="0" aria-label="일정표. 좌우로 스크롤하여 전체 기간을 볼 수 있습니다."><div class="gantt">${header}${rows}</div></div>${tasks().length===0?'<div class="gantt-bottom-note">아직 등록된 업무가 없습니다. 날짜와 진행률은 업무 등록 후 표시됩니다. <button type="button" data-demo-enable>화면 예시 보기 →</button></div>':''}`;
+    $('#timeline-view').innerHTML=`<div class="gantt-scroll" tabindex="0" aria-label="일정표. 좌우로 스크롤하여 전체 기간을 볼 수 있습니다."><div class="gantt" data-scale="${state.scale}">${header}${rows}</div></div>${tasks().length===0?'<div class="gantt-bottom-note">아직 등록된 업무가 없습니다. 날짜와 진행률은 업무 등록 후 표시됩니다. <button type="button" data-demo-enable>화면 예시 보기 →</button></div>':''}`;
     const allExpanded=phases.length>0&&phases.every(p=>state.expanded.has(p.id));
     $('#expand-all').innerHTML=icon('unfold')+`<span>${allExpanded?'전체 접기':'전체 펼치기'}</span>`;
     $('#expand-all').dataset.expanded=String(allExpanded);
@@ -235,7 +262,7 @@
   }
   function renderAll() {renderDataStatus();renderMetrics();renderOwners();renderWorkspace();renderRecent();}
   function setDemo(value) {
-    $('#task-dialog').close();state.demo=value;state.expanded.clear();state.query='';state.status='all';state.owner='all';state.start=monthStart(today);
+    $('#task-dialog').close();state.demo=value;state.expanded.clear();state.query='';state.status='all';state.owner='all';state.scale='full';state.start=projectFirstMonth;
     $('#search').value='';$('#status-filter').value='all';
     try{const url=new URL(location.href);if(value)url.searchParams.set('demo','1');else url.searchParams.delete('demo');history.replaceState(null,'',url);}catch{}
     renderAll();
@@ -254,7 +281,7 @@
     if(target.dataset.phase){const id=target.dataset.phase;state.expanded.has(id)?state.expanded.delete(id):state.expanded.add(id);const scroll=$('.gantt-scroll')?.scrollLeft||0;renderWorkspace();$('.gantt-scroll').scrollLeft=scroll;const replacement=$(`.phase-cell[data-phase="${id}"]`);replacement?.focus({preventScroll:true});}
     else if(target.dataset.task)openTask(target.dataset.task);
     else if(target.dataset.view){state.view=target.dataset.view;renderWorkspace();}
-    else if(target.dataset.scale){state.scale=target.dataset.scale;renderWorkspace();}
+    else if(target.dataset.scale){state.scale=target.dataset.scale;state.start=state.scale==='full'?projectFirstMonth:clampStart(state.start);renderWorkspace();}
     else if(target.hasAttribute('data-demo-enable'))setDemo(true);
     else if(target.classList.contains('dialog-close'))target.closest('dialog').close();
     else if(target.dataset.copyIssue){const link=`${repositoryUrl}/issues/${Number(target.dataset.copyIssue)}`;try{await navigator.clipboard.writeText(link);toast('Issue 링크를 복사했습니다.');}catch{toast('복사 권한이 없습니다. GitHub에서 링크를 복사해 주세요.');}}
@@ -265,9 +292,19 @@
   $('#reset-filters').addEventListener('click',()=>{state.query='';state.status='all';state.owner='all';$('#search').value='';$('#status-filter').value='all';$('#owner-filter').value='all';renderWorkspace();});
   $('#demo-toggle').addEventListener('click',()=>setDemo(!state.demo));
   $('#exit-demo').addEventListener('click',()=>setDemo(false));
-  $('#previous-range').addEventListener('click',()=>{state.start=monthStart(state.start,state.scale==='month'?-3:-1);renderWorkspace();});
-  $('#next-range').addEventListener('click',()=>{state.start=monthStart(state.start,state.scale==='month'?3:1);renderWorkspace();});
-  $('#today-button').addEventListener('click',()=>{state.start=monthStart(today);renderWorkspace();const scroller=$('.gantt-scroll');if(scroller)scroller.scrollLeft=0;});
+  $('#previous-range').addEventListener('click',()=>{state.start=clampStart(monthStart(state.start,state.scale==='month'?-3:-1));renderWorkspace();});
+  $('#next-range').addEventListener('click',()=>{state.start=clampStart(monthStart(state.start,state.scale==='month'?3:1));renderWorkspace();});
+  $('#today-button').addEventListener('click',()=>{
+    if(today<projectStart||today>projectEnd){toast('오늘은 설정된 프로젝트 기간 밖입니다.');return;}
+    state.start=state.scale==='full'?projectFirstMonth:clampStart(today);
+    renderWorkspace();
+    const scroller=$('.gantt-scroll'),track=$('.gantt-dates');
+    if(scroller&&track){
+      const labelWidth=$('.gantt-label-header').offsetWidth;
+      const target=labelWidth+track.offsetWidth*timeGeometry().todayPosition/100;
+      scroller.scrollLeft=Math.max(0,target-labelWidth-(scroller.clientWidth-labelWidth)/2);
+    }
+  });
   $('#expand-all').addEventListener('click',()=>{if($('#expand-all').dataset.expanded==='true')state.expanded.clear();else config.phases.forEach(p=>state.expanded.add(p.id));renderWorkspace();});
   $('#help-button').addEventListener('click',()=>$('#help-dialog').showModal());
   $('#refresh').addEventListener('click',()=>location.reload());
@@ -275,5 +312,13 @@
   document.addEventListener('keydown',event=>{if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!$('dialog[open]')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){event.preventDefault();$('#search').focus();}});
   $$('[data-repo-link]').forEach(link=>link.href=repositoryUrl);
   $('#new-issue').href=`${repositoryUrl}/issues/new?template=task.yml`;
+  const period=document.createElement('p');
+  period.id='project-period';period.className='project-period';
+  period.textContent=`프로젝트 전체 기간  ${monthLabel(projectStart)} ~ ${monthLabel(projectEnd)} · ${projectMonths}개월`;
+  $('.hero-subtitle').after(period);
+  const fullButton=document.createElement('button');
+  fullButton.type='button';fullButton.dataset.scale='full';fullButton.textContent='전체';
+  fullButton.setAttribute('aria-label','프로젝트 전체 기간 보기');
+  $('.scale-switch').prepend(fullButton);
   renderIcons();renderAll();
 })();

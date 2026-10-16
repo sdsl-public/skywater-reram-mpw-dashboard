@@ -3,6 +3,9 @@ window.DASHBOARD_CONFIG = Object.freeze({
   repository: 'sdsl-public/skywater-reram-mpw-dashboard',
   title: 'SkyWater ReRAM MPW',
   timezone: 'Asia/Seoul',
+  // Fixed public project window. Individual Issue dates are not rewritten.
+  projectStart: '2026-10-01',
+  projectEnd: '2027-09-30',
   targetDate: null,
   projectUrl: null,
   phases: [
