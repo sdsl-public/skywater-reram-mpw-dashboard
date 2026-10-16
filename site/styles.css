@@ -140,3 +140,6 @@
   .workspace + .metrics{margin-top:28px}
   .metrics + .lower-grid{margin-top:26px}
 }
+
+/* Single-column updates after removing the workflow explainer. */
+.lower-grid{grid-template-columns:minmax(0,1fr)}

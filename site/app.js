@@ -306,7 +306,6 @@
     }
   });
   $('#expand-all').addEventListener('click',()=>{if($('#expand-all').dataset.expanded==='true')state.expanded.clear();else config.phases.forEach(p=>state.expanded.add(p.id));renderWorkspace();});
-  $('#help-button').addEventListener('click',()=>$('#help-dialog').showModal());
   $('#refresh').addEventListener('click',()=>location.reload());
   $$('dialog').forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}}));
   document.addEventListener('keydown',event=>{if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!$('dialog[open]')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){event.preventDefault();$('#search').focus();}});
