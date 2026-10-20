@@ -293,5 +293,12 @@
   .timeline-header #new-report{padding:7px 8px;font-size:10px}
 }
 
-/* Copyright footer: two intentional lines across desktop and mobile. */
-.site-footer .copyright-notice > span{display:block}
+/* The explicit HTML line break keeps both copyright lines separate without cached CSS. */
+.site-footer .copyright-notice{line-height:1.5}
+@media screen and (max-width:760px){
+  .site-footer .copyright-notice{
+    order:3;
+    width:100%;
+    text-align:center;
+  }
+}
