@@ -43,6 +43,8 @@ class DeliverableTests(unittest.TestCase):
         self.assertNotIn('id="demo-toggle"', html)
         self.assertIn('id="new-report"', html)
         self.assertIn('href="./skywater_weekly_report_template.html"', html)
+        self.assertIn('id="recent-reports"', html)
+        self.assertIn('src="./report-data.js"', html)
 
     def test_module_syntax_and_read_only_behavior(self):
         path = ROOT / 'site/deliverables.js'
@@ -63,9 +65,11 @@ class DeliverableTests(unittest.TestCase):
             module.ROOT = root
             module.main()
             result = {str(p.relative_to(root / '_site')) for p in (root / '_site').rglob('*') if p.is_file()}
-            self.assertEqual(result, set(module.ASSETS))
-            self.assertEqual(len(result), 17)
+            self.assertEqual(result, set(module.ASSETS) | {module.REPORT_FEED})
+            self.assertEqual(len(result), 18)
             self.assertIn('skywater_weekly_report_template.html', result)
+            self.assertIn('report-data.js', result)
+            self.assertIn('window.DASHBOARD_REPORTS = ', (root / '_site/report-data.js').read_text())
             self.assertNotIn('never-publish.txt', result)
 
     def test_build_refuses_missing_icon(self):
