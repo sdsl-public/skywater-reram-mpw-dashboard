@@ -95,7 +95,7 @@
   .avatar{width:30px;height:30px;font-size:11px}
   .panel-heading h2{font-size:23px}
   .panel-heading .eyebrow{font-size:11px}
-  .activity-item{padding:16px 0;flex-wrap:wrap}
+  .activity-item{padding:8px 0;flex-wrap:wrap}
   .activity-item strong{font-size:14px;white-space:normal;line-height:1.8;min-width:0}
   .activity-item span{font-size:12px}
   .activity-empty,.workflow-panel p{font-size:14px}
@@ -253,6 +253,11 @@
 }
 @media screen and (max-width:480px){
   .workspace-footer .legend{column-gap:16px;row-gap:10px}
+}
+
+/* Compact recent activity rows on mobile; desktop has its 8px rule above. */
+@media screen and (max-width:760px){
+  .activity-item{padding-top:7px;padding-bottom:7px}
 }
 
 
