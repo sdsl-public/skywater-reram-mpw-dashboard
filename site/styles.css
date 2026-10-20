@@ -97,7 +97,7 @@
   .panel-heading .eyebrow{font-size:11px}
   .activity-item{padding:5px 0;flex-wrap:wrap}
   .activity-item strong{font-size:14px;white-space:normal;line-height:1.4;min-width:0}
-  .activity-item span{font-size:12px}
+  .activity-item span{font-size:12px;line-height:1.4}
   .activity-empty,.workflow-panel p{font-size:14px}
   .workflow-steps{font-size:14px;flex-wrap:wrap;gap:12px}
   .workflow-steps b{font-size:13px}
