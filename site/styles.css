@@ -292,3 +292,6 @@
   .timeline-header #new-issue,
   .timeline-header #new-report{padding:7px 8px;font-size:10px}
 }
+
+/* Copyright footer: two intentional lines across desktop and mobile. */
+.site-footer .copyright-notice > span{display:block}
