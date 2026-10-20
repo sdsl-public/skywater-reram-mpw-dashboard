@@ -41,6 +41,8 @@ class DeliverableTests(unittest.TestCase):
         self.assertLess(html.index('src="./app.js"'), html.index('src="./deliverables.js?v=1"'))
         self.assertIn('class="section-top timeline-header"', html)
         self.assertNotIn('id="demo-toggle"', html)
+        self.assertIn('id="new-report"', html)
+        self.assertIn('href="./skywater_weekly_report_template.html"', html)
 
     def test_module_syntax_and_read_only_behavior(self):
         path = ROOT / 'site/deliverables.js'
@@ -62,7 +64,9 @@ class DeliverableTests(unittest.TestCase):
             module.main()
             result = {str(p.relative_to(root / '_site')) for p in (root / '_site').rglob('*') if p.is_file()}
             self.assertEqual(result, set(module.ASSETS))
-            self.assertEqual(len(result), 16)
+            self.assertEqual(len(result), 17)
+            self.assertIn('skywater_weekly_report_template.html', result)
+            self.assertNotIn('never-publish.txt', result)
 
     def test_build_refuses_missing_icon(self):
         module = builder()
