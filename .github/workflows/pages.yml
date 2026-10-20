@@ -30,6 +30,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: main
+          fetch-depth: 0
           persist-credentials: false
       - name: Test the exporter, calendar and deliverable assets
         run: |
@@ -79,6 +80,8 @@ jobs:
               'app.js': 'projectEndExclusive',
               'config.js': "projectEnd: '2027-09-30'",
               'data.js': 'github-issues',
+              'report-data.js': 'window.DASHBOARD_REPORTS = ',
+              'skywater_weekly_report_template.html': 'Weekly Report',
               'deliverables.js': 'phase-deliverable',
               'deliverables.css': 'width:44px',
           }
