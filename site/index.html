@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="./deliverables.css?v=1">
   <script defer src="./config.js"></script>
   <script defer src="./data.js"></script>
+  <script defer src="./report-data.js"></script>
   <script defer src="./app.js"></script>
   <script defer src="./deliverables.js?v=1"></script>
 </head>
@@ -59,7 +60,16 @@
     </div>
   </section>
   <section class="metrics" id="metrics" aria-label="프로젝트 전체 현황"></section>
-  <section class="lower-grid"><div class="updates-panel"><div class="panel-heading"><h2>최근 업무 업데이트</h2><span class="eyebrow">LATEST ACTIVITY</span></div><div id="recent-updates"></div></div></section>
+  <section class="lower-grid" aria-label="최근 업무 및 리포트 업데이트">
+    <div class="updates-panel">
+      <div class="panel-heading"><h2>최근 업무 업데이트</h2><span class="eyebrow">LATEST ACTIVITY</span></div>
+      <div id="recent-updates"></div>
+    </div>
+    <div class="updates-panel reports-panel">
+      <div class="panel-heading"><h2>최근 리포트 업데이트</h2><span class="eyebrow">LATEST REPORTS</span></div>
+      <div id="recent-reports"></div>
+    </div>
+  </section>
   <p class="public-notice"><span data-icon="globe"></span>이 저장소와 모든 Issue는 공개됩니다. PDK, 비공개 회로도, 미공개 연구자료, 접근 토큰은 업로드하지 마세요.</p>
 </main>
 <footer class="site-footer"><span>SDSL <span class="brand-slash">/</span> SkyWater ReRAM MPW</span><span>독립 연구 프로젝트 현황판 · SkyWater 공식 웹사이트가 아닙니다.</span><a data-repo-link href="https://github.com/sdsl-public/skywater-reram-mpw-dashboard" target="_blank" rel="noopener noreferrer">Built with GitHub<span data-icon="arrow-up-right"></span></a></footer>
