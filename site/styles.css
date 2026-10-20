@@ -209,7 +209,7 @@
   .timeline-refresh{width:30px;height:34px;justify-content:center;gap:0;padding:0}
   .timeline-refresh .refresh-label{display:none}
   .timeline-header #new-issue{font-size:10px;min-height:34px;padding:7px 10px;gap:5px}
-  .timeline-header #new-issue svg:last-child{display:none}
+  .timeline-header #new-issue [data-icon="arrow-up-right"]{display:none}
 }
 @media screen and (max-width:480px){
   .timeline-header h2{font-size:20px}
@@ -270,8 +270,11 @@
     padding:7px 10px;
     gap:5px;
   }
-  .timeline-header #new-issue svg:last-child,
-  .timeline-header #new-report svg:last-child{display:none}
+  /* Hide the entire icon wrapper; hiding only SVG leaves an empty flex item and gap. */
+  .timeline-header #new-issue [data-icon="arrow-up-right"],
+  .timeline-header #new-report [data-icon="arrow-up-right"]{display:none}
+  .timeline-header #new-issue,
+  .timeline-header #new-report{justify-content:center;text-align:center}
 }
 @media screen and (max-width:480px){
   .timeline-header #new-issue,
