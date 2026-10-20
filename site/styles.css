@@ -256,20 +256,24 @@
 }
 
 
-/* Weekly report template entry point beside the GitHub task button. */
+/* Identical task and report action buttons on desktop and mobile. */
+.timeline-header #new-issue,
 .timeline-header #new-report{
-  flex:0 0 auto;white-space:nowrap;
-  background:var(--accent,#c4f5a2);
-  color:var(--background,#0a0b0b);
-  border-color:transparent;
-}
-.timeline-header #new-report:hover{
-  filter:brightness(1.06);
+  flex:0 0 auto;
+  white-space:nowrap;
 }
 @media screen and (max-width:760px){
-  .timeline-header #new-report{font-size:10px;min-height:34px;padding:7px 10px;gap:5px}
+  .timeline-header #new-issue,
+  .timeline-header #new-report{
+    font-size:10px;
+    min-height:34px;
+    padding:7px 10px;
+    gap:5px;
+  }
+  .timeline-header #new-issue svg:last-child,
   .timeline-header #new-report svg:last-child{display:none}
 }
 @media screen and (max-width:480px){
+  .timeline-header #new-issue,
   .timeline-header #new-report{padding:7px 8px;font-size:10px}
 }
