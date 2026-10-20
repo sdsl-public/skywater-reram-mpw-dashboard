@@ -254,3 +254,23 @@
 @media screen and (max-width:480px){
   .workspace-footer .legend{column-gap:16px;row-gap:10px}
 }
+
+
+/* Weekly report template entry point beside the GitHub task button. */
+.timeline-header #new-report{
+  flex:0 0 auto;white-space:nowrap;
+  border-color:rgba(202,221,190,.32);
+  background:rgba(202,221,190,.07);
+  color:#e4eddc;
+}
+.timeline-header #new-report:hover{
+  background:rgba(202,221,190,.13);
+  border-color:rgba(202,221,190,.5);
+}
+@media screen and (max-width:760px){
+  .timeline-header #new-report{font-size:10px;min-height:34px;padding:7px 10px;gap:5px}
+  .timeline-header #new-report svg:last-child{display:none}
+}
+@media screen and (max-width:480px){
+  .timeline-header #new-report{padding:7px 8px;font-size:10px}
+}
