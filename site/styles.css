@@ -294,7 +294,7 @@
 }
 
 /* The explicit HTML line break keeps both copyright lines separate without cached CSS. */
-.site-footer .copyright-notice{line-height:1.5}
+.site-footer .copyright-notice{line-height:1.5;text-align:center}
 @media screen and (max-width:760px){
   .site-footer .copyright-notice{
     order:3;
