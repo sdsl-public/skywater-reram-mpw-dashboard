@@ -141,8 +141,15 @@
   .metrics + .lower-grid{margin-top:26px}
 }
 
-/* Single-column updates after removing the workflow explainer. */
-.lower-grid{grid-template-columns:minmax(0,1fr)}
+/* Two balanced update panels on desktop; stack the panels on mobile. */
+.lower-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px}
+.lower-grid > .updates-panel{min-width:0}
+.reports-panel .activity-item{color:inherit;text-decoration:none;cursor:pointer}
+.reports-panel .activity-item:hover strong{color:var(--accent)}
+.reports-panel .activity-dot{background:var(--accent)}
+@media screen and (max-width:760px){
+  .lower-grid{grid-template-columns:minmax(0,1fr);gap:28px}
+}
 
 /* Dense roadmap: align labels and bars vertically with minimal whitespace. */
 /* Task row minimums include the two prior 1px-per-side padding reductions (4px total). */
