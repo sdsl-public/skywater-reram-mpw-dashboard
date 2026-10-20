@@ -5,6 +5,7 @@
   if (!config || !/^[\w.-]+\/[\w.-]+$/.test(config.repository)) throw new Error('Invalid repository configuration.');
   const repositoryUrl = `https://github.com/${config.repository}`;
   const source = window.DASHBOARD_DATA || {tasks: [], generated_at: null, source: 'not-synced', warnings: []};
+  const reportSource = window.DASHBOARD_REPORTS || {reports: []};
   const DAY = 86400000;
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -250,6 +251,12 @@
     const recent=[...tasks()].sort((a,b)=>(Date.parse(b.updated_at)||0)-(Date.parse(a.updated_at)||0)).slice(0,3);
     $('#recent-updates').innerHTML=recent.length?recent.map(t=>`<button class="activity-item" type="button" data-task="${escape(t.id)}" style="${phaseStyle(phaseById(t.phase))}"><i class="activity-dot"></i><strong>${escape(t.title)}</strong><span>${escape(timestampLabel(t.updated_at))}</span></button>`).join(''):'<div class="activity-empty">실제 업무가 등록되면 최근 수정한 내용이 여기에 표시됩니다.</div>';
   }
+  function renderReports() {
+    const recent = Array.isArray(reportSource.reports) ? reportSource.reports.slice(0,3) : [];
+    const destination = $('#recent-reports');
+    if (!destination) return;
+    destination.innerHTML = recent.length ? recent.map(report => `<a class="activity-item report-activity" href="${escape(report.url)}" target="_blank" rel="noopener noreferrer"><i class="activity-dot"></i><strong>${escape(report.title)}</strong><span>${escape(timestampLabel(report.updated_at))}</span></a>`).join('') : '<div class="activity-empty">등록된 리포트가 없습니다. 작성한 HTML 파일을 GitHub의 reports/weekly/ 폴더에 업로드하세요.</div>';
+  }
   function renderWorkspace() {
     const list=filteredTasks();
     $('#filtered-count').textContent=`${list.length}개 업무${state.demo?' · 예시':''}`;
@@ -260,7 +267,7 @@
     $('#timeline-controls').hidden=state.view!=='timeline';
     renderTimeline(list);renderList(list);renderBoard(list);
   }
-  function renderAll() {renderDataStatus();renderMetrics();renderOwners();renderWorkspace();renderRecent();}
+  function renderAll() {renderDataStatus();renderMetrics();renderOwners();renderWorkspace();renderRecent();renderReports();}
   function setDemo(value) {
     $('#task-dialog').close();state.demo=value;state.expanded.clear();state.query='';state.status='all';state.owner='all';state.scale='full';state.start=projectFirstMonth;
     $('#search').value='';$('#status-filter').value='all';
