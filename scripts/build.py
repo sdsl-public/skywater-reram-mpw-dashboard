@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSETS = (
     "index.html", "styles.css", "theme.css", "app.js", "config.js", "data.js",
     "favicon.svg", ".nojekyll", "deliverables.js", "deliverables.css",
+    "skywater_weekly_report_template.html",
 ) + tuple(f"assets/timeline-icons/{number:02d}.webp" for number in range(1, 7))
 
 def main() -> None:
