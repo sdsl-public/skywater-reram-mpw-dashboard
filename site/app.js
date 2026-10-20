@@ -154,7 +154,7 @@
   function renderDataStatus() {
     $('#demo-banner').hidden=!state.demo;
     const synced=Boolean(source.generated_at && source.source==='github-issues');
-    $('#data-status').innerHTML=state.demo?'<span class="status-light"></span><span>EXAMPLE DATA · 실제 현황과 분리된 화면 예시</span>':`<span class="status-light ${synced?'synced':''}"></span><span>${synced?`GitHub Issues · 마지막 동기화 ${escape(timestampLabel(source.generated_at))}`:'등록된 실제 업무 없음 · 첫 데이터 동기화 대기'}</span>${source.warnings?.length?`<span title="입력 양식이 잘못된 일부 날짜는 미정으로 표시됩니다.">· 입력 확인 ${source.warnings.length}건</span>`:''}`;
+    $('#data-status').innerHTML=state.demo?'<span class="status-light"></span><span>EXAMPLE DATA · 실제 현황과 분리된 화면 예시</span>':`<span class="status-light ${synced?'synced':''}"></span><span>${synced?`마지막 동기화 ${escape(timestampLabel(source.generated_at))}`:'등록된 실제 업무 없음 · 첫 데이터 동기화 대기'}</span>${source.warnings?.length?`<span title="입력 양식이 잘못된 일부 날짜는 미정으로 표시됩니다.">· 입력 확인 ${source.warnings.length}건</span>`:''}`;
   }
   function renderOwners() {
     const owners=[...new Set(tasks().flatMap(t=>t.assignees))].sort();
