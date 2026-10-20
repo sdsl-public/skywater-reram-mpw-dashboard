@@ -50,7 +50,7 @@
   .small-button{font-size:14px;padding:6px 15px}
   .scale-switch button{font-size:14px;min-height:34px;padding:4px 15px}
   .quiet-button svg,.demo-toggle svg{width:16px;height:16px}
-  .gantt{--label-w:300px;min-width:1240px}
+  .gantt{--label-w:270px;min-width:1240px}
   .gantt-head{height:108px}
   .gantt-label-header{font-size:14px;gap:8px;padding-right:16px}
   .gantt-label-header span:last-child{font-size:10px}
