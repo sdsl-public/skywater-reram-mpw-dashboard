@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="SkyWater ReRAM MPW 프로젝트용 간결한 Weekly Report 템플릿">
+  <title>Weekly Report · SkyWater ReRAM MPW</title>
+  <style>
+:root{
+  --ink:#1e1e1e;
+  --muted:#7a7a7a;
+  --line:#cfcfcf;
+  --line-strong:#9c9c9c;
+  --paper:#ffffff;
+  --canvas:#f1eded;
+  --accent:#1f1f1f;
+  --font:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--canvas)}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--font);font-size:11pt;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,[contenteditable]:focus-visible{outline:1px solid #777;outline-offset:3px}
+[hidden]{display:none!important}
+.editor{width:210mm;max-width:calc(100% - 24px);margin:14px auto 8px;padding:0}
+.editor-top{display:flex;align-items:center;justify-content:flex-end;gap:14px}
+.editor-title{font-size:11px;font-weight:600;letter-spacing:.12em;color:#4b4b4b;text-transform:uppercase}
+.controls{display:flex;gap:7px;flex-wrap:wrap}
+.control{min-height:32px;padding:6px 11px;border:1px solid #c8c8c8;border-radius:2px;background:#fff;color:#222;font-size:11px;line-height:1.3;letter-spacing:.01em}
+.control:hover{background:#f5f5f5}
+.control.primary{background:#242424;border-color:#242424;color:#fff}
+.control.primary:hover{background:#000}
+.sheet{width:210mm;min-height:297mm;max-width:calc(100% - 24px);margin:0 auto 12px;padding:13mm 15mm 6mm;background:var(--paper);box-shadow:0 10px 30px rgba(75,52,52,.10);border:1px solid #ece8e8;display:flex;flex-direction:column}
+.sheet>header{display:grid;grid-template-columns:minmax(0,1fr);align-items:end;margin-bottom:6mm}
+.kicker{grid-column:1/-1;font-size:20px;line-height:1.38;letter-spacing:.05em;color:#000;margin:0 0 7.5mm;font-weight:800;text-transform:none;text-align:center;font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;}
+h1{grid-column:1/-1;font-size:24pt;line-height:1.25;font-weight:400;letter-spacing:.14em;margin:0;overflow-wrap:anywhere;text-transform:uppercase}
+.metadata{grid-column:1/-1;display:grid;grid-template-columns:auto auto;justify-content:center;gap:10mm;font-size:10pt;color:#333;padding:0;border:0;align-self:end;margin-top:0}
+.metadata-item{display:grid;grid-template-columns:auto 42mm;align-items:center;gap:2.5mm;min-width:0;min-height:24px}
+.metadata-label{display:flex;align-items:center;height:24px;line-height:24px;font-weight:600;white-space:nowrap;letter-spacing:.14em;font-size:10pt;text-transform:uppercase}
+.metadata-value{display:flex;align-items:center;min-width:0;height:24px;min-height:24px;padding:0 0 1px;border-bottom:1px solid var(--line);line-height:22px;overflow-wrap:anywhere}
+.report-section{margin-top:4.5mm}.report-section + .report-section{margin-top:6.75mm}
+h2{display:flex;align-items:baseline;gap:3mm;font-size:10pt;line-height:1.35;font-weight:650;letter-spacing:.13em;margin:0 0 2mm;text-transform:uppercase;break-after:avoid;page-break-after:avoid}
+.section-number{font-size:inherit;font-weight:500;color:#858585;font-variant-numeric:tabular-nums;letter-spacing:.08em}
+.field{white-space:pre-wrap;overflow-wrap:anywhere;border-radius:0;outline:0}
+.field:hover{background:#fafafa}
+.field:focus{background:#fafafa}
+.field[data-empty="true"]::before{content:attr(data-placeholder);color:#a1a1a1;pointer-events:none}
+.text{line-height:1.75;orphans:2;widows:2;padding:0 0 .25em;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(1.75em - 1px),var(--line) calc(1.75em - 1px),var(--line) 1.75em);background-size:100% 1.75em}
+#purpose{min-height:3.5em}
+#results{min-height:8.75em}
+#conclusion{min-height:3.5em}
+.media-tools{display:flex;align-items:center;gap:7px;margin-top:2.5mm;flex-wrap:wrap}
+.media-tools .control{font-size:10px;min-height:27px;padding:5px 8px}
+.media-note{font-size:9px;color:#8c8c8c}
+.visual{margin:3mm 0 0;break-inside:avoid;page-break-inside:avoid}
+.figure-image{display:block;max-width:100%;width:auto;max-height:60mm;height:auto;margin:0 auto;object-fit:contain}
+figcaption,.table-caption{font-size:8.5pt;line-height:1.5;color:#565656;margin-top:2mm;text-align:center;min-height:1.5em}
+.table-wrap{width:100%;margin-top:5mm;break-inside:avoid;page-break-inside:avoid}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.5pt;line-height:1.5}
+th,td{padding:2mm 2.5mm;text-align:left;vertical-align:top;border:1px solid #d7d7d7;overflow-wrap:anywhere}
+th{background:#f5f5f5;font-weight:600;letter-spacing:.02em}
+.references{margin-top:10mm;padding-top:3mm;border-top:1px solid var(--line-strong);display:grid;grid-template-columns:auto minmax(0,1fr);gap:4mm;font-size:8.5pt;line-height:1.6;color:#555;break-inside:avoid;page-break-inside:avoid}
+.references-label{font-weight:650;letter-spacing:.12em;text-transform:uppercase}
+.references .field{min-height:1.6em;border-bottom:1px solid var(--line);padding-bottom:1mm}
+.outside-guide{width:210mm;max-width:calc(100% - 24px);margin:0 auto 24px;padding:7px 2px 0;text-align:center;font-size:11px;line-height:1.7;letter-spacing:.01em;color:#858585}
+.outside-guide strong{font-weight:650;color:#666}
+.mini-time{height:22px;min-height:22px;padding:0 5px;border:1px solid #d2d2d2;border-radius:2px;background:#fafafa;color:#555;font-size:11px;line-height:20px;white-space:nowrap;align-self:center}
+.mini-time:hover{background:#f0f0f0;color:#222}
+.datetime-item{grid-template-columns:auto 56mm auto;gap:2mm}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);max-width:calc(100% - 32px);padding:10px 15px;border-radius:2px;background:#222;color:#fff;font-size:13px;line-height:1.6;box-shadow:0 4px 16px #0002;z-index:10}
+noscript{display:block;padding:12px;text-align:center;background:#fff8df;font-size:12px}
+@media(max-width:850px){
+  .editor,.outside-guide{margin-left:20px;margin-right:20px}
+  .sheet{padding:28px 24px;min-height:0}
+  .editor-top{flex-wrap:wrap}
+  .sheet>header{grid-template-columns:1fr;row-gap:5mm}
+  .metadata{grid-column:1;grid-template-columns:auto auto;justify-content:center;gap:5mm;margin-top:1mm}
+}
+@media(max-width:560px){.metadata{grid-template-columns:1fr;justify-content:stretch}.metadata-item{grid-template-columns:auto minmax(0,1fr)}.controls{width:100%}.control{flex:1 1 auto}.mini-time{flex:0 0 auto}.datetime-item{grid-template-columns:auto minmax(0,1fr) auto}}
+@media print{
+  @page{size:A4;margin:13mm 15mm 12mm}
+  html,body{margin:0!important;padding:0!important;background:#fff!important;color:#1e1e1e}
+  body{font-size:11pt;line-height:1.55}
+  .screen-only,.toast,noscript{display:none!important}
+  .sheet{width:auto;min-height:0;max-width:none;margin:0;padding:0;border:0;box-shadow:none;display:block}
+  .sheet>header{grid-template-columns:minmax(0,1fr)}
+  .metadata{grid-column:1/-1;grid-template-columns:auto auto;justify-content:center;gap:10mm;margin-top:4mm}
+  .field,.field:hover,.field:focus{background-color:transparent!important;outline:none!important}
+  .references[data-empty="true"]{display:none}
+  .table-wrap th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .text{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  a{color:inherit}
+}
+
+  </style>
+
+<style id="persistent-writing-lines">
+  /* 28px row pitch (+3px) with underline position compensated to preserve the prior text-to-rule gap. */
+  .field.text,
+  .field.text:hover,
+  .field.text:focus,
+  .field.text:focus-visible {
+    line-height: 28px !important;
+    background-color: transparent !important;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 25.5px,
+      var(--line) 25.5px,
+      var(--line) 26.5px,
+      transparent 26.5px,
+      transparent 28px
+    ) !important;
+    background-size: 100% 28px !important;
+    background-repeat: repeat-y !important;
+    box-shadow: none !important;
+  }
+
+  .field.text:focus,
+  .field.text:focus-visible {
+    outline: none;
+  }
+</style>
+
+
+<style id="results-six-lines">
+  /* Results section: show six ruled lines by default. */
+  #results.field.text {
+    min-height: calc(28px * 6);
+  }
+</style>
+
+
+<style id="numbered-reference-style">
+  .references{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+  .references-list{
+    list-style:none;
+    counter-reset:ref;
+    margin:0;
+    padding:0;
+    min-width:0;
+  }
+  .references-list li{
+    counter-increment:ref;
+    display:grid;
+    grid-template-columns:1.5em minmax(0,1fr);
+    align-items:start;
+    min-height:1.8em;
+  }
+  .references-list li::before{
+    content:counter(ref) ")";
+    color:#555;
+    font-variant-numeric:tabular-nums;
+    line-height:1.6;
+  }
+  .reference-entry{
+    display:block;
+    min-width:0;
+    min-height:1.6em;
+    border-bottom:1px solid var(--line);
+    padding-bottom:1mm;
+    outline:none;
+  }
+  .reference-entry:focus,
+  .reference-entry:hover{
+    background:#fafafa;
+  }
+  .reference-entry[data-empty="true"]::before{
+    content:attr(data-placeholder);
+    color:var(--placeholder);
+    pointer-events:none;
+  }
+</style>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Neuton:wght@400;700&display=swap" rel="stylesheet">
+
+<style id="laboratory-footer-style">
+  .laboratory-footer{
+    margin-top:auto;
+    padding-top:6mm;
+    text-align:center;
+    font-family:'Neuton', Georgia, serif;
+    font-size:13pt;
+    font-weight:700;
+    letter-spacing:.04em;
+    color:#203864;
+    line-height:1.2;
+  }
+</style>
+
+
+<style id="conclusion-three-lines">
+  /* Conclusion section: show three ruled lines by default. */
+  #conclusion.field.text {
+    min-height: calc(28px * 3);
+  }
+</style>
+
+
+
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+<style id="laboratory-footer-mobile">
+  @media (max-width: 600px) {
+    .laboratory-footer {
+      font-size: 10.5pt;
+      letter-spacing: .015em;
+      white-space: nowrap;
+    }
+  }
+</style>
+
+</head>
+<body>
+  <div class="editor screen-only" aria-label="보고서 편집 도구">
+    <div class="editor-top">
+      <div class="controls">
+        <button class="control" id="print-button" type="button">인쇄 / PDF</button>
+        <button class="control primary" id="save-button" type="button">HTML 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <article class="sheet" id="report" aria-label="Weekly 보고서">
+    <header>
+      <p class="kicker">SkyWater ReRAM MPW Project<br>Weekly Report</p>
+      <div class="metadata">
+        <div class="metadata-item author-item"><span class="metadata-label">작성자</span><span class="metadata-value field" id="author" contenteditable="plaintext-only" role="textbox" aria-label="작성자" data-single-line="true" data-empty="true" data-placeholder="이름"></span></div>
+        <div class="metadata-item datetime-item"><span class="metadata-label">작성일시</span><span class="metadata-value field" id="written-at" contenteditable="plaintext-only" role="textbox" aria-label="작성일시 (한국 표준시)" data-single-line="true" data-empty="true" data-placeholder="YYYY.MM.DD HH:mm (KST)"></span><button class="mini-time screen-only" id="time-button" type="button" title="현재 KST 일시 입력">현재 일시 입력</button></div>
+      </div>
+    </header>
+
+    <section class="report-section" aria-labelledby="purpose-heading">
+      <h2 id="purpose-heading"><span class="section-number">01</span>목적</h2>
+      <div class="field text" id="purpose" contenteditable="plaintext-only" role="textbox" aria-label="목적" aria-multiline="true" data-body="true" data-empty="true" data-placeholder="이번 업무에서 확인하거나 해결하려는 내용을 1~2문장으로 작성합니다."></div>
+    </section>
+
+    <section class="report-section" aria-labelledby="results-heading">
+      <h2 id="results-heading"><span class="section-number">02</span>수행 내용 및 주요 결과</h2>
+      <div class="field text" id="results" contenteditable="plaintext-only" role="textbox" aria-label="수행 내용 및 주요 결과" aria-multiline="true" data-body="true" data-empty="true" data-placeholder="조사·설계·실험에서 수행한 내용과 결과를 작성합니다. 핵심 조건, 수치, 비교 결과를 중심으로 5~8문장 이내로 정리합니다."></div>
+      <div class="media-tools screen-only">
+        <button class="control" id="image-button" type="button">그림 추가</button>
+        <button class="control" id="remove-visual" type="button" hidden>그림 제거</button>
+        <span class="media-note">선택 · 그림 높이 최대 6cm</span>
+        <input id="image-input" type="file" accept="image/png,image/jpeg,image/webp" hidden aria-label="보고서 그림 파일 선택">
+      </div>
+      <figure class="visual" id="report-figure" hidden>
+        <img class="figure-image" id="report-image" alt="보고서 그림">
+        <figcaption class="field" id="figure-caption" contenteditable="plaintext-only" role="textbox" aria-label="그림 설명" data-body="true" data-empty="true" data-placeholder="그림 1. 핵심 내용을 한 줄로 설명합니다."></figcaption>
+      </figure>
+    </section>
+
+    <section class="report-section" aria-labelledby="conclusion-heading">
+      <h2 id="conclusion-heading"><span class="section-number">03</span>결론 및 다음 작업</h2>
+      <div class="field text" id="conclusion" contenteditable="plaintext-only" role="textbox" aria-label="결론 및 다음 작업" aria-multiline="true" data-body="true" data-empty="true" data-placeholder="업무의 결론과 다음에 수행할 작업을 2~3문장으로 작성합니다. 미해결 사항이 있다면 함께 적습니다."></div>
+    </section>
+
+    <footer class="references" id="references-block" data-empty="true">
+      <span class="references-label">참고자료</span>
+      <ol class="references-list" id="references" aria-label="참고자료">
+        <li><span class="reference-entry field" contenteditable="plaintext-only" role="textbox" aria-label="참고자료 1" data-single-line="true" data-empty="true" data-placeholder="문헌 또는 자료 주소를 입력합니다."></span></li>
+      </ol>
+    </footer>
+
+    <div class="laboratory-footer">Semiconductor Device and System Laboratory</div>
+
+  </article>
+
+  <div class="outside-guide screen-only" aria-label="편집 안내">
+    회색 안내 문구를 클릭해 작성하고, <strong>HTML 저장</strong> 버튼을 눌러서 저장합니다.<br>
+      권장 분량: A4 1쪽, 최대 1.5쪽. 본문 800~1,200자 · 그림 1개 이내.
+  </div>
+  <div class="toast screen-only" id="notice" role="status" hidden></div>
+  <noscript>JavaScript가 꺼져 있습니다. 입력 내용 저장과 그림 추가를 사용하려면 JavaScript를 활성화해 주세요.</noscript>
+
+  <script>
+    (() => {
+      'use strict';
+      const $ = id => document.getElementById(id);
+      let dirty = false;
+      let noticeTimer;
+      const text = element => (element.innerText || '').replace(/\u00a0/g, ' ').trim();
+      const editable = [...document.querySelectorAll('[contenteditable]')];
+
+      function notify(message) {
+        clearTimeout(noticeTimer);
+        $('notice').textContent = message;
+        $('notice').hidden = false;
+        noticeTimer = setTimeout(() => { $('notice').hidden = true; }, 4500);
+      }
+
+      function update() {
+        editable.forEach(element => { element.dataset.empty = String(!text(element)); });
+        $('references-block').dataset.empty = String(!text($('references')));
+        $('remove-visual').hidden = $('report-figure').hidden;
+        $('report-image').alt = text($('figure-caption')) || '보고서 그림';
+      }
+
+      editable.forEach(element => {
+        element.addEventListener('input', () => { dirty = true; update(); });
+        element.addEventListener('keydown', event => {
+          if (element.dataset.singleLine === 'true' && event.key === 'Enter') event.preventDefault();
+        });
+        // Strip pasted formatting: the report keeps one consistent type scale.
+        element.addEventListener('paste', event => {
+          const clipboard = event.clipboardData;
+          if (!clipboard) return;
+          event.preventDefault();
+          let value = clipboard.getData('text/plain');
+          if (element.dataset.singleLine === 'true') value = value.replace(/[\r\n]+/g, ' ');
+          const selection = window.getSelection();
+          if (!selection || !selection.rangeCount) return;
+          const range = selection.getRangeAt(0);
+          if (!element.contains(range.commonAncestorContainer)) return;
+          range.deleteContents();
+          const node = document.createTextNode(value);
+          range.insertNode(node);
+          range.setStartAfter(node);
+          range.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          dirty = true;
+          update();
+        });
+      });
+
+      $('time-button').addEventListener('click', () => {
+        const values = new Intl.DateTimeFormat('en-GB', {
+          timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit',
+          hour:'2-digit', minute:'2-digit', hourCycle:'h23'
+        }).formatToParts(new Date());
+        const part = name => values.find(item => item.type === name).value;
+        $('written-at').textContent = `${part('year')}.${part('month')}.${part('day')} ${part('hour')}:${part('minute')} (KST)`;
+        dirty = true;
+        update();
+      });
+
+      $('image-button').addEventListener('click', () => {
+        $('image-input').click();
+      });
+      $('remove-visual').addEventListener('click', () => {
+        $('report-figure').hidden = true;
+        $('report-image').removeAttribute('src');
+        dirty = true;
+        update();
+      });
+      $('image-input').addEventListener('change', async event => {
+        const file = event.target.files && event.target.files[0];
+        event.target.value = '';
+        if (!file) return;
+        if (!['image/png','image/jpeg','image/webp'].includes(file.type)) {
+          notify('PNG, JPG 또는 WebP 파일을 선택해 주세요.');
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          notify('5MB 이하의 그림을 선택해 주세요.');
+          return;
+        }
+        const url = URL.createObjectURL(file);
+        try {
+          const image = new Image();
+          image.src = url;
+          await image.decode();
+          const ratio = Math.min(1, 1600 / Math.max(image.naturalWidth, image.naturalHeight));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio));
+          canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
+          const context = canvas.getContext('2d');
+          if (!context) throw new Error('Canvas unavailable');
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+          $('report-image').src = canvas.toDataURL('image/png');
+          $('report-figure').hidden = false;
+          dirty = true;
+          update();
+          notify('그림을 삽입했습니다. HTML 저장 시 그림도 파일 안에 포함됩니다.');
+        } catch (error) {
+          notify('그림을 열 수 없습니다. 다른 이미지 파일을 선택해 주세요.');
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      });
+
+      $('print-button').addEventListener('click', () => {
+        update();
+        window.print();
+      });
+      window.addEventListener('beforeprint', update);
+
+      function validateRequiredFields() {
+        const required = [
+          {id:'author', label:'작성자'},
+          {id:'written-at', label:'작성일시'},
+          {id:'purpose', label:'01 목적'},
+          {id:'results', label:'02 수행 내용 및 주요 결과'},
+          {id:'conclusion', label:'03 결론 및 다음 작업'}
+        ];
+
+        for (const item of required) {
+          const el = $(item.id);
+          if (!el || !text(el)) {
+            alert(`${item.label}를 입력하세요.`);
+            if (el) {
+              el.focus();
+              try { el.scrollIntoView({behavior:'smooth', block:'center'}); } catch {}
+            }
+            return false;
+          }
+        }
+        return true;
+      }
+
+      $('save-button').addEventListener('click', () => {
+        update();
+        if (!validateRequiredFields()) return;
+
+        // Clone the current DOM so all values typed into contenteditable fields
+        // are embedded directly in the downloaded HTML file.
+        const copy = document.documentElement.cloneNode(true);
+
+        // Do not include the outside helper text in saved HTML.
+        const savedGuide = copy.querySelector('.outside-guide');
+        if (savedGuide) savedGuide.remove();
+        const authorName = text($('author')) || '작성자';
+        const writtenAt = text($('written-at')) || '날짜미정';
+        const reportName = `SkyWater ReRAM MPW Weekly Report · ${authorName} · ${writtenAt}`;
+
+        copy.querySelector('title').textContent = reportName;
+
+        // Do not carry a temporary toast into the saved report.
+        const savedNotice = copy.querySelector('#notice');
+        if (savedNotice) {
+          savedNotice.hidden = true;
+          savedNotice.textContent = '';
+        }
+
+        // Preserve the current editable values in the cloned document.
+        // Dynamically-created reference entries do not have IDs, so they are
+        // serialized separately by __serializeReferences().
+        for (const current of editable) {
+          if (!current.id) continue;
+          const saved = copy.querySelector(`#${CSS.escape(current.id)}`);
+          if (!saved) continue;
+          saved.textContent = current.innerText;
+          saved.dataset.empty = String(!text(current));
+        }
+
+        // Serialize numbered references after the regular editable fields.
+        if (window.__serializeReferences) window.__serializeReferences(copy);
+
+        // Preserve the current figure only when it is actually in use.
+        const savedFigure = copy.querySelector('#report-figure');
+        const savedImage = copy.querySelector('#report-image');
+        if (savedFigure && savedImage && savedFigure.hidden) {
+          savedImage.removeAttribute('src');
+        }
+
+        const serialized = '<!doctype html>\n' + copy.outerHTML;
+        const file = new Blob([serialized], {type:'text/html;charset=utf-8'});
+        const url = URL.createObjectURL(file);
+
+        const filenameBase = `${writtenAt}_${authorName}_Weekly_Report`
+          .replace(/[\\/:*?"<>|\u0000-\u001f]/g, '-')
+          .replace(/\s+/g, '_')
+          .slice(0, 100)
+          .replace(/[. _-]+$/g, '') || 'SkyWater_Weekly_Report';
+
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `${filenameBase}.html`;
+        anchor.style.display = 'none';
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        dirty = false;
+        notify('입력한 내용을 포함한 HTML 파일 다운로드를 요청했습니다.');
+      });
+      window.addEventListener('beforeunload', event => {
+        if (!dirty) return;
+        event.preventDefault();
+        event.returnValue = '';
+      });
+      update();
+    })();
+  </script>
+
+<script>
+(() => {
+  'use strict';
+
+  const list = document.getElementById('references');
+  const block = document.getElementById('references-block');
+  if (!list || list.tagName !== 'OL') return;
+
+  const entries = () => [...list.querySelectorAll('.reference-entry')];
+
+  function valueOf(el) {
+    return (el.innerText || '').replace(/\u00a0/g, ' ').trim();
+  }
+
+  function updateReferenceState() {
+    entries().forEach((entry, index) => {
+      entry.dataset.empty = String(!valueOf(entry));
+      entry.setAttribute('aria-label', `참고자료 ${index + 1}`);
+    });
+    if (block) {
+      const hasText = entries().some(entry => valueOf(entry));
+      block.dataset.empty = String(!hasText);
+    }
+  }
+
+  function makeRow(after) {
+    const li = document.createElement('li');
+    const entry = document.createElement('span');
+    entry.className = 'reference-entry field';
+    entry.contentEditable = 'plaintext-only';
+    entry.setAttribute('role', 'textbox');
+    entry.dataset.singleLine = 'true';
+    entry.dataset.empty = 'true';
+    entry.dataset.placeholder = '문헌 또는 자료 주소를 입력합니다.';
+    li.appendChild(entry);
+    after.after(li);
+    updateReferenceState();
+    entry.focus();
+    return entry;
+  }
+
+  list.addEventListener('keydown', event => {
+    const entry = event.target.closest('.reference-entry');
+    if (!entry) return;
+
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      makeRow(entry.closest('li'));
+      return;
+    }
+
+    if (event.key === 'Backspace' && !valueOf(entry) && entries().length > 1) {
+      event.preventDefault();
+      const li = entry.closest('li');
+      const prev = li.previousElementSibling?.querySelector('.reference-entry');
+      li.remove();
+      updateReferenceState();
+      prev?.focus();
+    }
+  });
+
+  list.addEventListener('input', () => {
+    updateReferenceState();
+    window.dispatchEvent(new Event('input', {bubbles:true}));
+  });
+
+  updateReferenceState();
+
+  // Expose a serializer hook for the existing save routine.
+  window.__serializeReferences = function(copy) {
+    const liveItems = entries();
+    const savedList = copy.querySelector('#references');
+    if (!savedList) return;
+    const savedItems = [...savedList.querySelectorAll('.reference-entry')];
+    liveItems.forEach((entry, index) => {
+      const saved = savedItems[index];
+      if (!saved) return;
+      saved.textContent = entry.innerText;
+      saved.dataset.empty = String(!valueOf(entry));
+    });
+    const savedBlock = copy.querySelector('#references-block');
+    if (savedBlock) {
+      savedBlock.dataset.empty = String(!liveItems.some(entry => valueOf(entry)));
+    }
+  };
+})();
+</script>
+
+</body>
+</html>
