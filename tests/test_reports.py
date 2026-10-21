@@ -19,7 +19,7 @@ class ReportIndexTests(unittest.TestCase):
         module = load_builder()
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            folder = root / "reports/weekly/2026"
+            folder = root / "reports/weekly/2026-10"
             folder.mkdir(parents=True)
             html = ('<article class="sheet" id="report">'
                     '<span id="author">{author}</span>'
@@ -31,7 +31,7 @@ class ReportIndexTests(unittest.TestCase):
             self.assertEqual(len(reports), 2)
             self.assertEqual(reports[0]["title"], "Weekly Report · 박실험")
             self.assertEqual(reports[0]["updated_at"], "2026-10-20T13:30:00+09:00")
-            self.assertIn("/blob/main/reports/weekly/2026/newer.html", reports[0]["url"])
+            self.assertIn("/skywater-reram-mpw-dashboard/reports/weekly/2026-10/newer.html", reports[0]["url"])
 
     def test_unapproved_html_files_are_not_indexed_or_published(self):
         module = load_builder()
@@ -57,7 +57,41 @@ class ReportIndexTests(unittest.TestCase):
             module.ROOT = root
             reports = module.report_items()
             self.assertEqual(reports[0]["title"], "Weekly Report · A & B")
-            self.assertTrue(reports[0]["url"].startswith("https://github.com/sdsl-public/"))
+            self.assertTrue(reports[0]["url"].startswith("https://sdsl-public.github.io/skywater-reram-mpw-dashboard/"))
+
+
+    def test_read_only_view_removes_scripts_events_and_editor_controls(self):
+        module = load_builder()
+        malicious = (
+            '<html><head><script>alert("outside")</script></head><body>'
+            '<article class="sheet" id="report" onclick="alert(1)">'
+            '<header><span id="author" contenteditable="true">Sample</span>'
+            '<span id="written-at">2026.10.21 14:12 (KST)</span></header>'
+            '<section class="report-section"><h2>Purpose</h2>'
+            '<div class="field text" id="purpose" onclick="hack()">'
+            'Safe &amp; complete<script>alert("inside")</script> Report</div>'
+            '<iframe src="https://untrusted.example"></iframe>'
+            '<img src="https://untrusted.example/p.png" onerror="hack()" alt="unsafe">'
+            '<img src="data:image/png;base64,iVBORw0KGgo=" alt="embedded">'
+            '</section></article></body></html>'
+        )
+        parser = module.ReadOnlyArticle()
+        parser.feed(malicious)
+        fragment = parser.result()
+        self.assertIsNotNone(fragment)
+        view = module.readonly_page(
+            '<!doctype html><html><head><title>Old title</title>',
+            fragment, 'Test report'
+        )
+        self.assertIn('script-src \'none\'', view)
+        self.assertIn('Safe &amp; complete Report', view)
+        self.assertIn('data:image/png;base64,iVBORw0KGgo=', view)
+        self.assertNotIn('<script', view)
+        self.assertNotIn('<iframe', view)
+        self.assertNotIn('onclick=', view)
+        self.assertNotIn('onerror=', view)
+        self.assertNotIn('contenteditable=', view)
+        self.assertNotIn('https://untrusted.example', view)
 
 
 if __name__ == "__main__":

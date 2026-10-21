@@ -83,6 +83,7 @@ jobs:
               'report-data.js': 'window.DASHBOARD_REPORTS = ',
               'report-data.json': '"reports":',
               'skywater_weekly_report_template.html': 'Weekly Report',
+              'reports/weekly/2026-10/2026.10.21_14-12_(KST)_ㅁ_Weekly_Report.html': 'script-src',
               'deliverables.js': 'phase-deliverable',
               'deliverables.css': 'width:44px',
           }
