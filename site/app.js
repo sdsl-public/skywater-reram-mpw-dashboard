@@ -267,7 +267,7 @@
       if (!response.ok) throw new Error('Report feed HTTP ' + response.status);
       const payload = await response.json();
       if (!payload || !Array.isArray(payload.reports)) throw new Error('Invalid report feed');
-      const trustedPrefix = `${repositoryUrl}/blob/main/reports/weekly/`;
+      const trustedPrefix = new URL('./reports/weekly/', document.baseURI).href;
       reportSource = {reports:payload.reports.filter(report =>
         report && typeof report.title==='string' &&
         typeof report.url==='string' && report.url.startsWith(trustedPrefix) &&

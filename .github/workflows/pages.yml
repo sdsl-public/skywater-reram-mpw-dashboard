@@ -36,6 +36,7 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -v
           node --check site/app.js
+          node tests/test_report_refresh.js
           node --check site/config.js
           node --check site/deliverables.js
       - name: Export approved public Issues
