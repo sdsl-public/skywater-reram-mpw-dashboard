@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#0a0b0b">
-  <meta name="description" content="SkyWater ReRAM MPW 연구 프로젝트의 공개 일정과 업무 진행 현황. GitHub Issues 기반의 읽기 전용 현황판입니다.">
+  <meta name="description" content="GitHub Issues 기반 연구 프로젝트 일정·업무 현황판.">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'none'; form-action https://github.com; frame-src 'none'">
-  <title>SkyWater ReRAM MPW · Project dashboard</title>
+  <title>Research Project Dashboard · Project dashboard</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,15 +22,15 @@
 <body>
 <a class="skip-link" href="#workspace">본문으로 이동</a>
 <header class="site-header">
-  <a class="brand" href="./" aria-label="현황판 처음으로"><span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="7" y="7" width="18" height="18" rx="3"/><path d="M12 12h8v8h-8zM11 3v4m10-4v4M11 25v4m10-4v4M3 11h4m-4 10h4m18-10h4m-4 10h4"/></svg></span><span>SDSL<span class="brand-slash"> / </span><span class="brand-sub">PROJECT JOURNAL</span></span></a>
-  <div class="header-right"><span class="public-badge"><span class="small-dot"></span>PUBLIC / READ ONLY</span><a class="text-link github-link" data-repo-link href="https://github.com/sdsl-public/skywater-reram-mpw-dashboard" target="_blank" rel="noopener noreferrer"><span data-icon="github"></span>GitHub<span data-icon="arrow-up-right"></span></a></div>
+  <a class="brand" href="./" aria-label="현황판 처음으로"><span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="7" y="7" width="18" height="18" rx="3"/><path d="M12 12h8v8h-8zM11 3v4m10-4v4M11 25v4m10-4v4M3 11h4m-4 10h4m18-10h4m-4 10h4"/></svg></span><span><span id="brand-organization">RESEARCH</span><span class="brand-slash"> / </span><span class="brand-sub">PROJECT JOURNAL</span></span></a>
+  <div class="header-right"><span class="public-badge"><span class="small-dot"></span>PUBLIC / READ ONLY</span><a class="text-link github-link" data-repo-link href="https://github.com/" target="_blank" rel="noopener noreferrer"><span data-icon="github"></span>GitHub<span data-icon="arrow-up-right"></span></a></div>
 </header>
 <main class="page-shell">
   <section class="hero" aria-labelledby="project-title">
     <div class="hero-glow" aria-hidden="true"></div>
-    <p class="hero-kicker"><span class="small-dot"></span> FROM CONCEPT TO SILICON</p>
-    <h1 id="project-title"><span>SkyWater</span><span class="gradient-text">ReRAM MPW</span></h1>
-    <p class="hero-subtitle">설계부터 제작, 측정까지. 프로젝트의 모든 단계를 한눈에.</p>
+    <p class="hero-kicker"><span class="small-dot"></span> <span id="hero-kicker-text">FROM IDEA TO IMPACT</span></p>
+    <h1 id="project-title"><span id="hero-primary">Research</span><span class="gradient-text" id="hero-accent">Project Dashboard</span></h1>
+    <p class="hero-subtitle">연구 기획부터 성과 정리까지. 프로젝트의 모든 단계를 한눈에.</p>
   </section>
   <section class="workspace" id="workspace" aria-labelledby="workspace-title">
     <div class="section-top timeline-header">
@@ -38,10 +38,10 @@
       <div class="timeline-header-controls">
         <div id="data-status" class="timeline-sync-status" role="status"></div>
         <button id="refresh" class="quiet-button timeline-refresh" type="button" aria-label="현황판 새로고침"><span data-icon="refresh"></span><span class="refresh-label">새로고침</span></button>
-        <a class="button button-primary" id="new-issue" href="https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/new?template=task.yml" target="_blank" rel="noopener noreferrer">업무 등록<span data-icon="arrow-up-right"></span></a><a class="button button-primary" id="new-report" href="./skywater_weekly_report_template.html" target="_blank" rel="noopener noreferrer">리포트 생성<span data-icon="arrow-up-right"></span></a>
+        <a class="button button-primary" id="new-issue" href="https://github.com/" target="_blank" rel="noopener noreferrer">업무 등록<span data-icon="arrow-up-right"></span></a><a class="button button-primary" id="new-report" href="./weekly_report_template.html" target="_blank" rel="noopener noreferrer">리포트 생성<span data-icon="arrow-up-right"></span></a>
       </div>
     </div>
-    <div id="demo-banner" class="demo-banner" hidden><span data-icon="info"></span><div><strong>화면 예시 모드</strong><span>아래 업무·날짜·진행률은 디자인 확인용 가상 데이터입니다. 실제 MPW 일정이 아닙니다.</span></div><button id="exit-demo" type="button">실제 현황으로</button></div>
+    <div id="demo-banner" class="demo-banner" hidden><span data-icon="info"></span><div><strong>화면 예시 모드</strong><span>아래 업무·날짜·진행률은 디자인 확인용 가상 데이터입니다. 실제 프로젝트 일정이 아닙니다.</span></div><button id="exit-demo" type="button">실제 현황으로</button></div>
     <div class="workspace-toolbar"><div class="view-switch" role="group" aria-label="보기 방식"><button data-view="timeline" aria-pressed="true" type="button"><span data-icon="gantt"></span>타임라인</button><button data-view="list" aria-pressed="false" type="button"><span data-icon="list"></span>업무 목록</button><button data-view="board" aria-pressed="false" type="button"><span data-icon="columns"></span>칸반 보드</button></div><div class="filter-row"><label class="search-box"><span data-icon="search"></span><input id="search" type="search" placeholder="업무 검색" autocomplete="off" aria-label="업무 이름 또는 요약 검색"><kbd>/</kbd></label><label class="sr-only" for="status-filter">상태 필터</label><select id="status-filter"><option value="all">모든 상태</option><option value="planned">대기</option><option value="in-progress">진행 중</option><option value="review">검토 중</option><option value="blocked">보류</option><option value="done">완료</option><option value="cancelled">취소</option><option value="overdue">기한 초과</option></select><label class="sr-only" for="owner-filter">담당자 필터</label><select id="owner-filter"><option value="all">모든 담당자</option></select></div></div>
     <div class="timeline-controls" id="timeline-controls"><div class="range-controls"><button id="previous-range" class="icon-button" aria-label="이전 기간" type="button"><span data-icon="chevron-left"></span></button><span id="range-label"></span><button id="next-range" class="icon-button" aria-label="다음 기간" type="button"><span data-icon="chevron-right"></span></button><button id="today-button" class="small-button" type="button">오늘</button></div><div class="range-options"><span id="filtered-count" class="muted"></span><button id="expand-all" class="quiet-button" type="button"><span data-icon="unfold"></span><span>전체 펼치기</span></button><div class="scale-switch" role="group" aria-label="타임라인 배율"><button data-scale="month" aria-pressed="true" type="button">월</button><button data-scale="week" aria-pressed="false" type="button">주</button></div></div></div>
     <div id="no-results" class="no-results" hidden><span data-icon="search"></span><strong>조건에 맞는 업무가 없습니다.</strong><button id="reset-filters" class="small-button" type="button">필터 초기화</button></div>
@@ -74,7 +74,7 @@
   </section>
   <p class="public-notice"><span data-icon="globe"></span>이 저장소와 모든 Issue는 공개됩니다. PDK, 비공개 회로도, 미공개 연구자료, 접근 토큰은 업로드하지 마세요.</p>
 </main>
-<footer class="site-footer"><span>SDSL <span class="brand-slash">/</span> SkyWater ReRAM MPW</span><span class="copyright-notice">Copyright 2026 Semiconductor Device and System Laboratory.<br>All rights reserved.</span><a data-repo-link href="https://github.com/sdsl-public/skywater-reram-mpw-dashboard" target="_blank" rel="noopener noreferrer">Built with GitHub<span data-icon="arrow-up-right"></span></a></footer>
+<footer class="site-footer"><span><span id="footer-organization">Research Project Team</span><span class="brand-slash"> / </span><span id="footer-project">Research Project Dashboard</span></span><span class="copyright-notice">Copyright <span id="footer-year">2026</span> <span id="footer-copyright-organization">Research Project Team</span>.<br>All rights reserved.</span><a data-repo-link href="https://github.com/" target="_blank" rel="noopener noreferrer">Built with GitHub<span data-icon="arrow-up-right"></span></a></footer>
 <dialog id="task-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span class="eyebrow" id="dialog-kicker">TASK DETAIL</span><button class="icon-button dialog-close" type="button" aria-label="상세 패널 닫기"><span data-icon="x"></span></button></div><div id="dialog-content"></div></dialog>
 
 <div id="toast" class="toast" role="status" hidden></div>

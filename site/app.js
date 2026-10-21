@@ -111,26 +111,26 @@
     // Scale only the explicitly labelled fictional examples across the project window.
     const demoOffset = day => Math.round(day/181*(projectDays-1));
     const rows=[
-      ['01','연구 목표·칩 요구사항 정리',0,7,'done',100],
-      ['01','어레이·평가 항목 정의',4,14,'done',100],
-      ['01','프로젝트 범위 검토',10,23,'in-progress',60],
-      ['02','PDK 접근·라이선스 확인',8,23,'in-progress',40],
-      ['02','설계·검증 도구 환경 구축',17,36,'planned',0],
-      ['02','설계 환경 검토 완료',37,37,'planned',0,'milestone'],
-      ['03','ReRAM 어레이 아키텍처',28,55,'planned',0],
-      ['03','주변회로·제어 로직',40,72,'planned',0],
-      ['03','회로 시뮬레이션·리뷰',60,82,'planned',0],
-      ['04','셀·주변회로 레이아웃',75,102,'planned',0],
-      ['04','DRC·LVS·기생성분 검증',90,114,'planned',0],
-      ['04','최종 설계 검토',115,115,'planned',0,'milestone'],
-      ['05','제출 자료·테이프아웃 준비',111,124,'planned',0],
-      ['05','MPW 제작·입고 일정 확인',123,155,'planned',0],
-      ['05','테스트 보드·측정 준비',135,164,'planned',0],
-      ['06','초기 구동·스위칭 평가',158,173,'planned',0],
-      ['06','신뢰성·어레이 특성 분석',166,179,'planned',0],
-      ['06','연구 결과 정리',177,181,'planned',0,'milestone']
+      ['01','프로젝트 목적·범위 설정',0,7,'done',100],
+      ['01','성과 지표·일정 초안',4,14,'done',100],
+      ['01','참여 인력·역할 검토',10,23,'in-progress',60],
+      ['02','선행연구 조사',8,23,'in-progress',40],
+      ['02','자료 수집·요구사항 작성',17,36,'planned',0],
+      ['02','요구사항 검토 완료',37,37,'planned',0,'milestone'],
+      ['03','방법론·시스템 구성 설계',28,55,'planned',0],
+      ['03','개발·실험 계획 구체화',40,72,'planned',0],
+      ['03','설계 검토',60,82,'planned',0],
+      ['04','프로토타입 구현',75,102,'planned',0],
+      ['04','기능·성능 검증',90,114,'planned',0],
+      ['04','구현 검토 완료',115,115,'planned',0,'milestone'],
+      ['05','실험 및 정량 평가',111,124,'planned',0],
+      ['05','데이터 분석',123,155,'planned',0],
+      ['05','추가 검증',135,164,'planned',0],
+      ['06','성과 정리',158,173,'planned',0],
+      ['06','보고서 작성',166,179,'planned',0],
+      ['06','최종 결과 공유',177,181,'planned',0,'milestone']
     ];
-    return rows.map((r,i)=>normalizeTask({id:`demo-${i}`,title:r[1],phase:r[0],start:dayKey(addDays(base,demoOffset(r[2]))),end:dayKey(addDays(base,demoOffset(r[3]))),status:r[4],progress:r[5],kind:r[6]||'task',assignees:[`sample-${['a','b','c'][i%3]}`],summary:'화면 구성 확인을 위한 예시 업무입니다. 담당자·날짜·진행률은 가상 값이며, 실제 프로젝트 일정이나 공정 제공사의 확정 일정이 아닙니다.',checklist:[{text:'요구사항 및 입력 자료 정리',done:r[5]>=40},{text:'설계·분석 수행',done:r[5]>=80},{text:'결과 검토 및 다음 단계 공유',done:r[5]===100}],updated_at:new Date(+today-(i+1)*3600000).toISOString()}));
+    return rows.map((r,i)=>normalizeTask({id:`demo-${i}`,title:r[1],phase:r[0],start:dayKey(addDays(base,demoOffset(r[2]))),end:dayKey(addDays(base,demoOffset(r[3]))),status:r[4],progress:r[5],kind:r[6]||'task',assignees:[`sample-${['a','b','c'][i%3]}`],summary:'화면 구성 확인을 위한 예시 업무입니다. 담당자·날짜·진행률은 가상 값이며, 실제 프로젝트의 확정 일정이 아닙니다.',checklist:[{text:'요구사항 및 입력 자료 정리',done:r[5]>=40},{text:'연구·업무 수행',done:r[5]>=80},{text:'결과 검토 및 다음 단계 공유',done:r[5]===100}],updated_at:new Date(+today-(i+1)*3600000).toISOString()}));
   }
   const demoTasks=makeDemo();
   const state={demo:new URLSearchParams(location.search).get('demo')==='1'||window.DASHBOARD_PREVIEW===true,view:'timeline',scale:'full',start:projectFirstMonth,expanded:new Set(),query:'',status:'all',owner:'all',sort:'phase'};
@@ -365,6 +365,22 @@
   document.addEventListener('keydown',event=>{if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!$('dialog[open]')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){event.preventDefault();$('#search').focus();}});
   $$('[data-repo-link]').forEach(link=>link.href=repositoryUrl);
   $('#new-issue').href=`${repositoryUrl}/issues/new?template=task.yml`;
+  // Brand the page from the reusable project configuration.
+  const h=$('#project-title');
+  if (h) {
+    if ($('#hero-primary')) $('#hero-primary').textContent=config.titlePrimary||'Research';
+    if ($('#hero-accent')) $('#hero-accent').textContent=config.titleAccent||'Project Dashboard';
+  }
+  document.title=(config.title||'Research Project')+' · Project dashboard';
+  if ($('.hero-subtitle')) $('.hero-subtitle').textContent=config.subtitle||'';
+  if ($('#hero-kicker-text')) $('#hero-kicker-text').textContent=config.kicker||'FROM IDEA TO IMPACT';
+  for(const [selector,value] of [
+    ['#brand-organization',config.organizationShort],
+    ['#footer-organization',config.organization],
+    ['#footer-project',config.title],
+    ['#footer-year',config.copyrightYear],
+    ['#footer-copyright-organization',config.organization]
+  ]){const el=$(selector);if(el)el.textContent=value||'';}
   const period=document.createElement('p');
   period.id='project-period';period.className='project-period';
   period.textContent=`프로젝트 전체 기간  ${monthLabel(projectStart)} ~ ${monthLabel(projectEnd)} · ${projectMonths}개월`;

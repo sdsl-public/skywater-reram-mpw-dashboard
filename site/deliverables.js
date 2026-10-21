@@ -4,14 +4,9 @@
   const root = document.getElementById('timeline-view');
   const phases = window.DASHBOARD_CONFIG?.phases;
   if (!root || !Array.isArray(phases)) return;
-  const outputs = Object.freeze({
-    '01': '조사·기획 문서',
-    '02': 'PDK·설계 환경',
-    '03': '회로·메모리 어레이 설계',
-    '04': '검증된 레이아웃',
-    '05': '제작 웨이퍼·칩',
-    '06': '측정·분석 결과'
-  });
+  const outputs=Object.freeze(Object.fromEntries(
+    phases.filter(phase=>phase.id!=='00').map(phase=>[phase.id,phase.deliverable||'단계 산출물'])
+  ));
   let entries = [];
   let frame = 0;
   function positionIcons() {
