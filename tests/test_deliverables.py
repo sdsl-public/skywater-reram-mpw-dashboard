@@ -1,5 +1,6 @@
 """Regression checks for approved deliverable artwork and safe public builds."""
 import hashlib
+import json
 import importlib.util
 import shutil
 import subprocess
@@ -38,13 +39,14 @@ class DeliverableTests(unittest.TestCase):
         html = (ROOT / 'site/index.html').read_text()
         self.assertEqual(html.count('src="./deliverables.js?v=1"'), 1)
         self.assertIn('href="./deliverables.css?v=1"', html)
-        self.assertLess(html.index('src="./app.js"'), html.index('src="./deliverables.js?v=1"'))
+        self.assertLess(html.index('src="./app.js?v=report-feed-refresh-1"'), html.index('src="./deliverables.js?v=1"'))
         self.assertIn('class="section-top timeline-header"', html)
         self.assertNotIn('id="demo-toggle"', html)
         self.assertIn('id="new-report"', html)
         self.assertIn('href="./skywater_weekly_report_template.html"', html)
         self.assertIn('id="recent-reports"', html)
-        self.assertIn('src="./report-data.js"', html)
+        self.assertIn('src="./report-data.js?v=20261021a"', html)
+        self.assertIn('report-data.json?refresh=', (ROOT / 'site/app.js').read_text())
 
     def test_module_syntax_and_read_only_behavior(self):
         path = ROOT / 'site/deliverables.js'
@@ -65,11 +67,12 @@ class DeliverableTests(unittest.TestCase):
             module.ROOT = root
             module.main()
             result = {str(p.relative_to(root / '_site')) for p in (root / '_site').rglob('*') if p.is_file()}
-            self.assertEqual(result, set(module.ASSETS) | {module.REPORT_FEED})
-            self.assertEqual(len(result), 18)
+            self.assertEqual(result, set(module.ASSETS) | {module.REPORT_FEED, module.REPORT_JSON})
+            self.assertEqual(len(result), 19)
             self.assertIn('skywater_weekly_report_template.html', result)
             self.assertIn('report-data.js', result)
             self.assertIn('window.DASHBOARD_REPORTS = ', (root / '_site/report-data.js').read_text())
+            self.assertEqual(json.loads((root / '_site/report-data.json').read_text()), {"reports":[]})
             self.assertNotIn('never-publish.txt', result)
 
     def test_build_refuses_missing_icon(self):

@@ -17,6 +17,7 @@ ASSETS = (
 ) + tuple(f"assets/timeline-icons/{number:02d}.webp" for number in range(1, 7))
 REPORT_DIR = Path("reports/weekly")
 REPORT_FEED = "report-data.js"
+REPORT_JSON = "report-data.json"
 REPOSITORY = "sdsl-public/skywater-reram-mpw-dashboard"
 KST = timezone(timedelta(hours=9))
 
@@ -131,11 +132,12 @@ def main() -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source / name, target)
     reports = report_items()
-    feed = "window.DASHBOARD_REPORTS = " + json.dumps(
-        {"reports": reports}, ensure_ascii=True, separators=(",", ":")
-    ) + ";\n"
-    (destination / REPORT_FEED).write_text(feed, encoding="utf-8")
-    print(f"Built {len(ASSETS)} allowlisted files and a feed for {len(reports)} weekly reports")
+    payload = json.dumps({"reports": reports}, ensure_ascii=True, separators=(",", ":"))
+    (destination / REPORT_FEED).write_text(
+        "window.DASHBOARD_REPORTS = " + payload + ";\n", encoding="utf-8"
+    )
+    (destination / REPORT_JSON).write_text(payload + "\n", encoding="utf-8")
+    print(f"Built {len(ASSETS)} allowlisted files and two feeds for {len(reports)} weekly reports")
 
 
 if __name__ == "__main__":

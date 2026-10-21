@@ -5,7 +5,7 @@
   if (!config || !/^[\w.-]+\/[\w.-]+$/.test(config.repository)) throw new Error('Invalid repository configuration.');
   const repositoryUrl = `https://github.com/${config.repository}`;
   const source = window.DASHBOARD_DATA || {tasks: [], generated_at: null, source: 'not-synced', warnings: []};
-  const reportSource = window.DASHBOARD_REPORTS || {reports: []};
+  let reportSource = window.DASHBOARD_REPORTS || {reports: []};
   const DAY = 86400000;
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -257,6 +257,27 @@
     if (!destination) return;
     destination.innerHTML = recent.length ? recent.map(report => `<a class="activity-item report-activity" href="${escape(report.url)}" target="_blank" rel="noopener noreferrer"><i class="activity-dot"></i><strong>${escape(report.title)}</strong><span>${escape(timestampLabel(report.updated_at))}</span></a>`).join('') : '<div class="activity-empty">등록된 리포트가 없습니다. 작성한 HTML 파일을 GitHub의 reports/weekly/ 폴더에 업로드하세요.</div>';
   }
+  // JSON is fetched with a unique URL on each visit to avoid stale GitHub Pages
+  // report-data.js/browser caches after new reports are committed.
+  async function refreshReports() {
+    try {
+      const response = await fetch(`./report-data.json?refresh=${Date.now()}`, {
+        cache:'no-store', credentials:'omit'
+      });
+      if (!response.ok) throw new Error('Report feed HTTP ' + response.status);
+      const payload = await response.json();
+      if (!payload || !Array.isArray(payload.reports)) throw new Error('Invalid report feed');
+      const trustedPrefix = `${repositoryUrl}/blob/main/reports/weekly/`;
+      reportSource = {reports:payload.reports.filter(report =>
+        report && typeof report.title==='string' &&
+        typeof report.url==='string' && report.url.startsWith(trustedPrefix) &&
+        Number.isFinite(Date.parse(report.updated_at))
+      ).slice(0,3)};
+      renderReports();
+    } catch {
+      // Retain the preloaded JS snapshot as a fallback when the network is unavailable.
+    }
+  }
   function renderWorkspace() {
     const list=filteredTasks();
     $('#filtered-count').textContent=`${list.length}개 업무${state.demo?' · 예시':''}`;
@@ -324,5 +345,5 @@
   fullButton.type='button';fullButton.dataset.scale='full';fullButton.textContent='전체';
   fullButton.setAttribute('aria-label','프로젝트 전체 기간 보기');
   $('.scale-switch').prepend(fullButton);
-  renderIcons();renderAll();
+  renderIcons();renderAll();refreshReports();
 })();
