@@ -65,7 +65,7 @@ class ReadOnlyArticle(HTMLParser):
         "footer", "ol", "ul", "li", "figure", "img", "figcaption",
         "br", "table", "thead", "tbody", "tfoot", "tr", "th", "td",
     })
-    VOID = frozenset({"img", "br"})
+    VOID = frozenset({"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"})
     IDS = frozenset({
         "report", "author", "written-at", "purpose", "results", "conclusion",
         "report-figure", "report-image", "figure-caption", "references",

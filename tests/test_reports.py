@@ -71,6 +71,7 @@ class ReportIndexTests(unittest.TestCase):
             '<div class="field text" id="purpose" onclick="hack()">'
             'Safe &amp; complete<script>alert("inside")</script> Report</div>'
             '<iframe src="https://untrusted.example"></iframe>'
+            '<input type="file"><span>Text after an input element</span>'
             '<img src="https://untrusted.example/p.png" onerror="hack()" alt="unsafe">'
             '<img src="data:image/png;base64,iVBORw0KGgo=" alt="embedded">'
             '</section></article></body></html>'
@@ -85,6 +86,8 @@ class ReportIndexTests(unittest.TestCase):
         )
         self.assertIn('script-src \'none\'', view)
         self.assertIn('Safe &amp; complete Report', view)
+        self.assertIn('Text after an input element', view)
+        self.assertNotIn('<input', view)
         self.assertIn('data:image/png;base64,iVBORw0KGgo=', view)
         self.assertNotIn('<script', view)
         self.assertNotIn('<iframe', view)
