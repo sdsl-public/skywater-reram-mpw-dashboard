@@ -145,15 +145,14 @@
   }
   const hasFilters=()=>Boolean(state.query || state.status!=='all' || state.owner!=='all');
   function renderMetrics() {
-    const all=tasks(),active=all.filter(isActive),done=active.filter(t=>t.status==='done').length,progress=progressOf(active),overdue=active.filter(isOverdue).length;
+    const all=tasks(),active=all.filter(isActive),done=active.filter(t=>t.status==='done').length,overdue=active.filter(isOverdue).length;
     const inProgress=active.filter(t=>t.status==='in-progress').length,review=active.filter(t=>t.status==='review').length,blocked=active.filter(t=>t.status==='blocked').length;
     const cards=[
       {name:'전체 업무',icon:'layers',value:active.length,unit:'개',sub:all.length===0?'첫 업무를 등록해 주세요':`완료 ${done} · 남은 업무 ${active.length-done}${all.length>active.length?` · 취소 ${all.length-active.length} 제외`:''}`},
-      {name:'전체 진행률',icon:'check-circle',value:progress===null?'—':progress,unit:progress===null?'':'%',sub:'업무별 진행률의 평균',bar:progress},
       {name:'진행 중',icon:'progress',value:inProgress,unit:'개',sub:`검토 중 ${review} · 보류 ${blocked}`},
       {name:'기한 초과',icon:'calendar',value:overdue,unit:'개',sub:active.length===0?'업무 일정 등록 대기':overdue?`미완료 업무 ${overdue}개 확인 필요`:'기한을 넘긴 업무가 없습니다',warn:overdue>0}
     ];
-    $('#metrics').innerHTML=cards.map(c=>`<div class="metric"><div class="metric-top"><span>${c.name}${state.demo?' · 예시':''}</span>${icon(c.icon)}</div><div class="metric-number${c.warn?' metric-warning':''}">${c.value}<small>${c.unit}</small></div><div class="metric-bottom"><span>${c.sub}</span>${c.bar!==undefined&&c.bar!==null?`<span class="metric-track"><i style="width:${c.bar}%"></i></span>`:''}</div></div>`).join('');
+    $('#metrics').innerHTML=cards.map(c=>`<div class="summary-stat"><div class="summary-stat-heading"><span>${c.name}${state.demo?' · 예시':''}</span>${icon(c.icon)}</div><div class="summary-stat-content"><strong class="summary-stat-value${c.warn?' summary-stat-warning':''}">${c.value}<small>${c.unit}</small></strong><span class="summary-stat-note">${c.sub}</span></div></div>`).join('');
   }
   function renderDataStatus() {
     $('#demo-banner').hidden=!state.demo;

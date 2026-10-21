@@ -37,6 +37,7 @@ jobs:
           python3 -m unittest discover -s tests -v
           node --check site/app.js
           node tests/test_report_refresh.js
+          node tests/test_summary_layout.js
           node --check site/config.js
           node --check site/deliverables.js
       - name: Export approved public Issues
@@ -76,7 +77,7 @@ jobs:
           from urllib.parse import quote
           base = os.environ['PAGE_URL'].rstrip('/') + '/'
           expected = {
-              '': 'app.js?v=report-deletion-sync-1',
+              '': 'app.js?v=summary-three-column-1',
               'styles.css': 'font-size:18px',
               'theme.css': 'Urbanist',
               'app.js': 'projectEndExclusive',

@@ -12,11 +12,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap">
-  <link rel="stylesheet" href="./styles.css?v=copyright-footer-2026-2">
+  <link rel="stylesheet" href="./styles.css?v=summary-three-column-1">
   <link rel="stylesheet" href="./deliverables.css?v=1">
   <script defer src="./config.js"></script>
   <script defer src="./data.js"></script>
-  <script defer src="./app.js?v=report-deletion-sync-1"></script>
+  <script defer src="./app.js?v=summary-three-column-1"></script>
   <script defer src="./deliverables.js?v=1"></script>
 </head>
 <body>
@@ -58,8 +58,11 @@
       </div>
     </div>
   </section>
-  <section class="metrics" id="metrics" aria-label="프로젝트 전체 현황"></section>
-  <section class="lower-grid" aria-label="최근 업무 및 리포트 업데이트">
+  <section class="lower-grid" aria-label="프로젝트 업무 현황 및 최근 업데이트">
+    <div class="updates-panel summary-panel" aria-labelledby="summary-title">
+      <div class="panel-heading"><h2 id="summary-title">업무 현황</h2><span class="eyebrow">PROJECT SUMMARY</span></div>
+      <div id="metrics" class="summary-list" aria-live="polite"></div>
+    </div>
     <div class="updates-panel">
       <div class="panel-heading"><h2>최근 업무 업데이트</h2><span class="eyebrow">LATEST ACTIVITY</span></div>
       <div id="recent-updates"></div>
