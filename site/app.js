@@ -278,6 +278,18 @@
       // Retain the preloaded JS snapshot as a fallback when the network is unavailable.
     }
   }
+  function startReportUpdates() {
+    refreshReports();
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) return refreshReports();
+    });
+    window.addEventListener('focus', () => {
+      if (!document.hidden) return refreshReports();
+    });
+    window.setInterval(() => {
+      if (!document.hidden) return refreshReports();
+    }, 60_000);
+  }
   function renderWorkspace() {
     const list=filteredTasks();
     $('#filtered-count').textContent=`${list.length}개 업무${state.demo?' · 예시':''}`;
@@ -345,5 +357,5 @@
   fullButton.type='button';fullButton.dataset.scale='full';fullButton.textContent='전체';
   fullButton.setAttribute('aria-label','프로젝트 전체 기간 보기');
   $('.scale-switch').prepend(fullButton);
-  renderIcons();renderAll();refreshReports();
+  renderIcons();renderAll();startReportUpdates();
 })();

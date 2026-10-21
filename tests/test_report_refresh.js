@@ -31,9 +31,12 @@ const legacy = {
   updated_at: valid.updated_at
 };
 const element = {innerHTML:''};
+const handlers = {};
+let fetchCalls=0;
 const sandbox = {
   reportSource:{reports:[]},
-  document:{baseURI:base},
+  document:{baseURI:base, hidden:false, addEventListener:(event,fn)=>{handlers[event]=fn;}},
+  window:{addEventListener:(event,fn)=>{handlers[event]=fn;},setInterval:(fn,ms)=>{assert.equal(ms,60000);handlers.periodic=fn;return 1;}},
   repositoryUrl:'https://github.com/sdsl-public/skywater-reram-mpw-dashboard',
   URL, Date,
   $: selector => selector === '#recent-reports' ? element : null,
@@ -42,6 +45,7 @@ const sandbox = {
   })[c]),
   timestampLabel: () => '10.21 KST',
   fetch: async (url, options) => {
+    fetchCalls += 1;
     assert.match(url, /^\.\/report-data\.json\?refresh=\d+$/);
     assert.equal(options.cache, 'no-store');
     return {ok:true,json:async ()=>({reports:[valid,...tenValid,invalid,legacy]})};
@@ -76,5 +80,19 @@ vm.runInContext('let reportSource = globalThis.reportSource; ' + source.slice(st
   assert.match(tasksElement.innerHTML, /Task 10/);
   assert.match(tasksElement.innerHTML, /Task 3/);
   assert.doesNotMatch(tasksElement.innerHTML, /Task 2/);
+  // A tab left open while a report is uploaded must refresh when revisited
+  // and once per minute while visible, without flooding background tabs.
+  await vm.runInContext('startReportUpdates()', sandbox);
+  assert.equal(fetchCalls, 2);
+  sandbox.document.hidden = true;
+  handlers.visibilitychange();
+  handlers.focus();
+  handlers.periodic();
+  assert.equal(fetchCalls, 2);
+  sandbox.document.hidden = false;
+  await handlers.visibilitychange();
+  await handlers.focus();
+  await handlers.periodic();
+  assert.equal(fetchCalls, 5);
   process.stdout.write('REPORT_FEED_AND_ACTIVITY_LATEST_EIGHT_PASS\n');
 })().catch(err=>{console.error(err); process.exitCode=1;});

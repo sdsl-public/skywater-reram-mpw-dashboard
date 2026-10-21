@@ -39,14 +39,16 @@ class DeliverableTests(unittest.TestCase):
         html = (ROOT / 'site/index.html').read_text()
         self.assertEqual(html.count('src="./deliverables.js?v=1"'), 1)
         self.assertIn('href="./deliverables.css?v=1"', html)
-        self.assertLess(html.index('src="./app.js?v=latest-eight-1"'), html.index('src="./deliverables.js?v=1"'))
+        self.assertLess(html.index('src="./app.js?v=report-auto-refresh-1"'), html.index('src="./deliverables.js?v=1"'))
         self.assertIn('class="section-top timeline-header"', html)
         self.assertNotIn('id="demo-toggle"', html)
         self.assertIn('id="new-report"', html)
         self.assertIn('href="./skywater_weekly_report_template.html"', html)
         self.assertIn('id="recent-reports"', html)
-        self.assertIn('src="./report-data.js?v=20261021a"', html)
+        self.assertIn('src="./report-data.js?v=20261021b"', html)
         self.assertIn('report-data.json?refresh=', (ROOT / 'site/app.js').read_text())
+        self.assertIn("window.setInterval(", (ROOT / 'site/app.js').read_text())
+        self.assertIn("document.addEventListener('visibilitychange'", (ROOT / 'site/app.js').read_text())
 
     def test_module_syntax_and_read_only_behavior(self):
         path = ROOT / 'site/deliverables.js'
