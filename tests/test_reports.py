@@ -31,7 +31,7 @@ class ReportIndexTests(unittest.TestCase):
             self.assertEqual(len(reports), 2)
             self.assertEqual(reports[0]["title"], "Weekly Report · 박실험")
             self.assertEqual(reports[0]["updated_at"], "2026-10-20T13:30:00+09:00")
-            self.assertIn("/YOUR-PROJECT-REPO/reports/weekly/2026-10/newer.html", reports[0]["url"])
+            self.assertEqual(reports[0]["url"], module.PUBLIC_SITE+"reports/weekly/2026-10/newer.html")
 
 
     def test_report_feed_contains_only_latest_eight(self):
@@ -78,7 +78,7 @@ class ReportIndexTests(unittest.TestCase):
             module.ROOT = root
             reports = module.report_items()
             self.assertEqual(reports[0]["title"], "Weekly Report · A & B")
-            self.assertTrue(reports[0]["url"].startswith("https://YOUR-OWNER.github.io/YOUR-PROJECT-REPO/"))
+            self.assertTrue(reports[0]["url"].startswith(module.PUBLIC_SITE))
 
 
     def test_read_only_view_removes_scripts_events_and_editor_controls(self):

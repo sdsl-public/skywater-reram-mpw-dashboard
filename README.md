@@ -1,44 +1,96 @@
-# SkyWater ReRAM MPW · Project dashboard
+# Research Project Dashboard — reusable project starter
 
-공개 읽기 전용 연구 프로젝트 현황판입니다. 업무 편집은 GitHub Issues에서 진행합니다.
+An independent, read-only research dashboard built on GitHub Issues and GitHub Pages.
+Based on the Amplect-inspired SkyWater dashboard UI, with all original project Issues,
+Weekly Report submissions, and source-specific labels removed.
 
-- 대시보드: https://sdsl-public.github.io/skywater-reram-mpw-dashboard/
-- 디자인 예시: https://sdsl-public.github.io/skywater-reram-mpw-dashboard/?demo=1
-- 업무 등록: https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/new?template=task.yml
+## What is included
 
-## 사용 방법
+- 6-phase interactive timeline (full project, 6-month and 3-month zoom)
+- Issues-driven tasks with status, assignees, dates, progress, filters and detail panels
+- One-line project summary, latest 8 tasks and latest 8 weekly reports
+- A4 Weekly Report authoring, local HTML save, read-only Pages viewing
+- Safe public-only issue export and sanitized published report HTML
+- Responsive desktop/mobile layout, 6 optional timeline illustration icons
+- GitHub Actions tests and Pages deployment
 
-1. 프로젝트 업무 양식으로 Issue를 작성합니다. 날짜가 미정이면 비워 둡니다.
-2. 저장소 관리자가 `dashboard` 라벨을 붙이면 현황판에 표시됩니다. 라벨이 없으면 Issues → Labels에서 생성하세요.
-3. 담당자는 Assignees, 일정·상태·진행률은 Issue 본문에서 수정합니다.
-4. 완료는 Completed로 닫고, 취소는 Not planned로 닫습니다.
-5. Issue 변경 또는 main 업데이트 후 `Publish public dashboard`가 새 스냅샷을 배포합니다. 6시간 간격 및 수동 실행도 지원합니다.
+## Set up a NEW repository
 
-## 프로젝트 기간과 보기
+1. Create an **empty public** repository (without GitHub-generated README or .gitignore).
+   Source project operational data should not be copied. Public is required for the
+   supported GitHub Free Pages + Issue export workflow.
+2. Copy this template branch into it, creating a **new root commit** instead of copying
+   the original repository's commit history:
 
-프로젝트 전체 기간은 **2026년 10월 1일 ~ 2027년 9월 30일**입니다. `site/config.js`의 `projectStart`, `projectEnd`에서 관리합니다. 시작일보다 앞선 종료일은 오류로 처리합니다.
+   ```bash
+   git clone --branch research-project-template-kit --single-branch https://github.com/sdsl-public/skywater-reram-mpw-dashboard.git new-dashboard
+   cd new-dashboard
+   git checkout --orphan main
+   git add -A
+   git commit -m "Initialize research project dashboard"
+   git remote set-url origin https://github.com/OWNER/NEW-REPOSITORY.git
+   git push -u origin main
+   ```
 
-기본 타임라인은 전체 12개월을 표시합니다. `전체`는 전체 기간, `월`은 6개월 확대, `주`는 3개월 확대 보기입니다. 이전·다음 이동은 프로젝트 기간 안으로 제한되며, `오늘`은 해당 날짜가 보이도록 이동합니다. 실제 Issue에 입력한 날짜와 진행률은 프로젝트 기간 설정 변경으로 수정하지 않습니다. 예시 일정만 명시된 프로젝트 기간에 맞춰 배치됩니다.
+   Replace OWNER/NEW-REPOSITORY with the newly created GitHub repository.
+   When published in a separate `research-project-dashboard-template` repository,
+   mark that repository **Settings → General → Template repository** and use
+   **Use this template → Create a new repository** instead.
 
-PC 화면에서는 단계 제목 18px, 업무 이름 15~16px, 주요 버튼·날짜 14~16px, 상세 본문 16px로 표시합니다. 글자 크기와 함께 행 높이, 버튼, 행간과 텍스트 대비를 조정했습니다. 모바일은 기존 반응형 구성을 유지하며 일정표 내부에서 가로로 스크롤할 수 있습니다.
+3. Edit `site/config.js`: project title, two-line hero title, subtitle, team,
+   copyright year, start/end, time zone and six phases. On a standard
+   `owner.github.io/repository` URL the repository is detected automatically.
+   For a custom domain or local viewing, replace the fallback value
+   `YOUR-OWNER/YOUR-PROJECT-REPO` in that same file.
+4. If you rename the six phase titles, update the matching dropdown text
+   in `.github/ISSUE_TEMPLATE/task.yml` (phase IDs 01 through 06 must stay stable).
+5. Create a GitHub Issue label named `dashboard` and enable Issues.
+   Submit tasks with **Issues → New issue → 프로젝트 업무**.
+   Label `dashboard` explicitly before public display; closed issues use
+   Done/Cancelled according to the GitHub closing reason.
+6. In **Settings → Pages**, choose Source: **GitHub Actions**.
+   Then **Actions → Publish public dashboard → Run workflow** (or push a change).
+   Allow GitHub Actions as needed for deployment. Enable Pages on the new public repo.
 
-## 화면
+The published URL is normally:
+`https://OWNER.github.io/NEW-REPOSITORY/`.
+Set repository variable `DASHBOARD_SITE_URL` for a custom domain (and configure
+`site/config.js` repository fallback).
 
-Amplect의 타임라인 스타일에서 영감을 얻어 독립적으로 구현했습니다. 중앙 정렬의 큰 제목, 가벼운 글꼴, 어두운 바탕, 민트·블루 그라데이션과 가는 구분선을 사용합니다. 영문은 Urbanist, 한글은 Noto Sans KR을 Google Fonts에서 불러오며, 네트워크가 차단되면 시스템 글꼴로 대체합니다. 원본 사이트의 독점 폰트 파일이나 코드를 복제하지 않았습니다.
+## Weekly Reports
 
-타임라인·목록·조회용 칸반, 단계 접기/펼치기, 검색, 담당자·상태 필터, 상세 패널과 모바일 보기를 제공합니다. 예시 모드는 실제 데이터와 분리되며 가상 업무를 GitHub에 생성하지 않습니다. 실제 일정과 진행률은 임의로 채우지 않습니다.
+Create a completed HTML report with the dashboard's **리포트 생성** link.
+The editor picks up the project title and organization from `site/config.js` and
+saves a standalone HTML report. Upload it under `reports/weekly/YYYY-MM/`.
+The repo build validates the report and publishes only a script-free, read-only
+copy for the dashboard's **최근 리포트 업데이트** area. Deleted reports disappear
+after the next successful Pages build; the dashboard refreshes the feed periodically.
 
-## 배포
+## Development and verification
 
-Settings → Pages → Source를 GitHub Actions로 설정합니다. `.github/workflows/pages.yml`은 검증 후 `site/`의 허용된 8개 파일만 빌드해 배포합니다. 기존 시각 테마는 `theme.css`, 가독성 조정은 `styles.css`에 분리되어 있습니다. GitHub Projects의 별도 날짜·상태 필드는 자동으로 읽지 않습니다.
+Python 3.11+ and Node.js 20+; third-party Python packages are not required:
 
-```sh
+```bash
 python3 -m unittest discover -s tests -v
 node --check site/app.js
+node tests/test_report_refresh.js
+node tests/test_summary_layout.js
 python3 scripts/build.py
-python3 -m http.server --directory site 8000
+python3 -m http.server --directory _site 8000
 ```
 
-## 공개 정보 주의
+For local report URLs set `GITHUB_REPOSITORY=OWNER/REPOSITORY` when building.
 
-이 저장소와 모든 Issue는 공개됩니다. PDK, NDA 자료, 비공개 회로 설계, 토큰, 비밀번호, 미공개 연구 결과는 업로드하지 마세요. `dashboard` 라벨은 현황판 노출만 제어하며 Issue 자체를 비공개로 만들지 않습니다. 토큰은 Actions의 기본 인증으로만 사용하고 웹페이지에는 포함하지 않습니다. SkyWater 공식 웹사이트가 아닌 독립 연구 프로젝트 현황판입니다.
+## Security and caveats
+
+**All repository contents, Issues and published reports are public.**
+Do not upload restricted research materials, vendor PDKs, license files,
+credentials, unreleased results or internal customer information.
+The `dashboard` label only controls dashboard visibility — not Issue privacy.
+Report HTML is sanitized and run as a read-only page, without its editor scripts.
+Published data includes summary metadata and source URLs.
+For private reports, use an access-controlled document service instead.
+
+Only the six bundled artwork icon files are distributed; there are no
+proprietary fonts or external paid UI code. Their descriptive titles can be
+replaced through `site/config.js`.

@@ -1,0 +1,38 @@
+name: Validate reusable dashboard starter
+on:
+  push:
+    branches: [research-project-template-kit]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Unit and script tests
+        run: |
+          python3 -m unittest discover -s tests -v
+          node --check site/app.js
+          node --check site/config.js
+          node --check site/deliverables.js
+          node tests/test_report_refresh.js
+          node tests/test_summary_layout.js
+      - name: Safe static build and empty source check
+        env:
+          GITHUB_REPOSITORY: example/research-project-dashboard
+        run: |
+          python3 scripts/build.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          feed=json.loads(Path('_site/report-data.json').read_text())
+          assert feed == {'reports': []}, feed
+          assert (Path('_site/weekly_report_template.html')).exists()
+          assert len(list(Path('_site/assets/timeline-icons').glob('*.webp'))) == 6
+          print('GENERIC_STARTER_BUILD_PASS')
+          PY
