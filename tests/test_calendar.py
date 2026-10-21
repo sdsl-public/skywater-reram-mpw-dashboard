@@ -10,7 +10,7 @@ class CalendarTests(unittest.TestCase):
         config=(ROOT/'site/config.js').read_text(encoding='utf-8')
         if reverse:
             import re
-            config=re.sub(r"projectEnd: '\\d{4}-\\d{2}-\\d{2}'",
+            config=re.sub(r"projectEnd: '\d{4}-\d{2}-\d{2}'",
                           "projectEnd: '1999-01-01'",config,count=1)
         app=(ROOT/'site/app.js').read_text(encoding='utf-8')
         prefix=app[:app.index('  const state=')]
