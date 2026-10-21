@@ -33,8 +33,11 @@ const legacy = {
 const element = {innerHTML:''};
 const handlers = {};
 let fetchCalls=0;
+let reportsPayload;
+let failFetch=false;
 const sandbox = {
   reportSource:{reports:[]},
+  reportLoadState:'loading',
   document:{baseURI:base, hidden:false, addEventListener:(event,fn)=>{handlers[event]=fn;}},
   window:{addEventListener:(event,fn)=>{handlers[event]=fn;},setInterval:(fn,ms)=>{assert.equal(ms,60000);handlers.periodic=fn;return 1;}},
   repositoryUrl:'https://github.com/sdsl-public/skywater-reram-mpw-dashboard',
@@ -48,13 +51,20 @@ const sandbox = {
     fetchCalls += 1;
     assert.match(url, /^\.\/report-data\.json\?refresh=\d+$/);
     assert.equal(options.cache, 'no-store');
-    return {ok:true,json:async ()=>({reports:[valid,...tenValid,invalid,legacy]})};
+    if (failFetch) throw new Error('Network unavailable');
+    return {ok:true,json:async ()=>({reports:reportsPayload})};
   },
 };
 vm.createContext(sandbox);
-vm.runInContext('let reportSource = globalThis.reportSource; ' + source.slice(start,end),sandbox);
+vm.runInContext(
+  'let reportSource = globalThis.reportSource; let reportLoadState = "loading"; let reportRequestId = 0; '
+  + source.slice(start,end),sandbox
+);
 
 (async ()=>{
+  vm.runInContext('renderReports()', sandbox);
+  assert.match(element.innerHTML, /목록을 확인하는 중입니다/);
+  reportsPayload = [valid,...tenValid,invalid,legacy];
   await vm.runInContext('refreshReports()', sandbox);
   assert.match(element.innerHTML, /Weekly Report · Sample/);
   assert.match(element.innerHTML, /reports\/weekly\/2026-10\/sample\.html/);
@@ -94,5 +104,21 @@ vm.runInContext('let reportSource = globalThis.reportSource; ' + source.slice(st
   await handlers.focus();
   await handlers.periodic();
   assert.equal(fetchCalls, 5);
+
+  // Removal must immediately erase a previously displayed report.
+  reportsPayload = [];
+  await vm.runInContext('refreshReports()', sandbox);
+  assert.match(element.innerHTML, /등록된 리포트가 없습니다/);
+  assert.doesNotMatch(element.innerHTML, /Weekly Report · Sample/);
+
+  // When offline, show an error instead of falsely retaining a deleted report.
+  reportsPayload = [valid];
+  await vm.runInContext('refreshReports()', sandbox);
+  assert.match(element.innerHTML, /Weekly Report · Sample/);
+  failFetch = true;
+  await vm.runInContext('refreshReports()', sandbox);
+  assert.match(element.innerHTML, /리포트 목록을 불러오지 못했습니다/);
+  assert.doesNotMatch(element.innerHTML, /Weekly Report · Sample/);
+  process.stdout.write('REPORT_DELETION_AND_CACHE_FALLBACK_PASS\n');
   process.stdout.write('REPORT_FEED_AND_ACTIVITY_LATEST_EIGHT_PASS\n');
 })().catch(err=>{console.error(err); process.exitCode=1;});

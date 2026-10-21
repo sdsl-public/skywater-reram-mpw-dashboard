@@ -76,7 +76,7 @@ jobs:
           from urllib.parse import quote
           base = os.environ['PAGE_URL'].rstrip('/') + '/'
           expected = {
-              '': 'deliverables.js?v=1',
+              '': 'app.js?v=report-deletion-sync-1',
               'styles.css': 'font-size:18px',
               'theme.css': 'Urbanist',
               'app.js': 'projectEndExclusive',

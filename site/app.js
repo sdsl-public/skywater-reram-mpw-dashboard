@@ -5,7 +5,10 @@
   if (!config || !/^[\w.-]+\/[\w.-]+$/.test(config.repository)) throw new Error('Invalid repository configuration.');
   const repositoryUrl = `https://github.com/${config.repository}`;
   const source = window.DASHBOARD_DATA || {tasks: [], generated_at: null, source: 'not-synced', warnings: []};
-  let reportSource = window.DASHBOARD_REPORTS || {reports: []};
+  // Never show the potentially stale preloaded report list after an upload or deletion.
+  let reportSource = {reports: []};
+  let reportLoadState = 'loading';
+  let reportRequestId = 0;
   const DAY = 86400000;
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -255,11 +258,20 @@
     const recent = Array.isArray(reportSource.reports) ? reportSource.reports.slice(0,8) : [];
     const destination = $('#recent-reports');
     if (!destination) return;
+    if (reportLoadState === 'loading') {
+      destination.innerHTML = '<div class="activity-empty">최근 리포트 목록을 확인하는 중입니다.</div>';
+      return;
+    }
+    if (reportLoadState === 'error') {
+      destination.innerHTML = '<div class="activity-empty">리포트 목록을 불러오지 못했습니다. 연결을 확인하고 다시 시도해 주세요.</div>';
+      return;
+    }
     destination.innerHTML = recent.length ? recent.map(report => `<a class="activity-item report-activity" href="${escape(report.url)}" target="_blank" rel="noopener noreferrer"><i class="activity-dot"></i><strong>${escape(report.title)}</strong><span>${escape(timestampLabel(report.updated_at))}</span></a>`).join('') : '<div class="activity-empty">등록된 리포트가 없습니다. 작성한 HTML 파일을 GitHub의 reports/weekly/ 폴더에 업로드하세요.</div>';
   }
-  // JSON is fetched with a unique URL on each visit to avoid stale GitHub Pages
-  // report-data.js/browser caches after new reports are committed.
+  // JSON is fetched with a unique URL. Unlike a preloaded JS feed, deletions
+  // cannot leave outdated entries visible when the network is unavailable.
   async function refreshReports() {
+    const requestId = ++reportRequestId;
     try {
       const response = await fetch(`./report-data.json?refresh=${Date.now()}`, {
         cache:'no-store', credentials:'omit'
@@ -267,15 +279,20 @@
       if (!response.ok) throw new Error('Report feed HTTP ' + response.status);
       const payload = await response.json();
       if (!payload || !Array.isArray(payload.reports)) throw new Error('Invalid report feed');
+      if (requestId !== reportRequestId) return;
       const trustedPrefix = new URL('./reports/weekly/', document.baseURI).href;
       reportSource = {reports:payload.reports.filter(report =>
         report && typeof report.title==='string' &&
         typeof report.url==='string' && report.url.startsWith(trustedPrefix) &&
         Number.isFinite(Date.parse(report.updated_at))
       ).slice(0,8)};
+      reportLoadState = 'ready';
       renderReports();
     } catch {
-      // Retain the preloaded JS snapshot as a fallback when the network is unavailable.
+      if (requestId !== reportRequestId) return;
+      reportSource = {reports: []};
+      reportLoadState = 'error';
+      renderReports();
     }
   }
   function startReportUpdates() {
