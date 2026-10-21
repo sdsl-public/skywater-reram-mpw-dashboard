@@ -33,6 +33,27 @@ class ReportIndexTests(unittest.TestCase):
             self.assertEqual(reports[0]["updated_at"], "2026-10-20T13:30:00+09:00")
             self.assertIn("/skywater-reram-mpw-dashboard/reports/weekly/2026-10/newer.html", reports[0]["url"])
 
+
+    def test_report_feed_contains_only_latest_eight(self):
+        module = load_builder()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            folder = root / "reports/weekly/2026-10"
+            folder.mkdir(parents=True)
+            for day in range(1, 11):
+                (folder / f"{day:02d}.html").write_text(
+                    '<article id="report">'
+                    f'<span id="author">Author {day:02d}</span>'
+                    f'<span id="written-at">2026.10.{day:02d} 10:00 (KST)</span>'
+                    '</article>',
+                    encoding="utf-8"
+                )
+            module.ROOT = root
+            listed = module.report_items()
+            self.assertEqual(len(listed), 8)
+            self.assertEqual(listed[0]["title"], "Weekly Report · Author 10")
+            self.assertEqual(listed[-1]["title"], "Weekly Report · Author 03")
+
     def test_unapproved_html_files_are_not_indexed_or_published(self):
         module = load_builder()
         with tempfile.TemporaryDirectory() as directory:

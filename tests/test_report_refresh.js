@@ -15,6 +15,11 @@ const valid = {
   url: base + 'reports/weekly/2026-10/sample.html',
   updated_at: '2026-10-21T14:12:00+09:00'
 };
+const tenValid = Array.from({length:10}, (_,i) => ({
+  ...valid,
+  title: 'Weekly Report ' + String(i+1),
+  url: base + 'reports/weekly/2026-10/report-' + String(i+1) + '.html'
+}));
 const invalid = {
   title: 'Untrusted page',
   url: 'https://untrusted.example/reports/weekly/fake.html',
@@ -39,7 +44,7 @@ const sandbox = {
   fetch: async (url, options) => {
     assert.match(url, /^\.\/report-data\.json\?refresh=\d+$/);
     assert.equal(options.cache, 'no-store');
-    return {ok:true,json:async ()=>({reports:[valid,invalid,legacy]})};
+    return {ok:true,json:async ()=>({reports:[valid,...tenValid,invalid,legacy]})};
   },
 };
 vm.createContext(sandbox);
@@ -52,5 +57,24 @@ vm.runInContext('let reportSource = globalThis.reportSource; ' + source.slice(st
   assert.doesNotMatch(element.innerHTML, /Untrusted page/);
   assert.doesNotMatch(element.innerHTML, /Old GitHub file view/);
   assert.doesNotMatch(element.innerHTML, /등록된 리포트가 없습니다/);
-  process.stdout.write('REPORT_FEED_PAGES_URL_ACCEPTANCE_PASS\n');
+  assert.equal((element.innerHTML.match(/class="activity-item report-activity"/g)||[]).length,8);
+  assert.match(element.innerHTML, /Weekly Report 7/);
+  assert.doesNotMatch(element.innerHTML, /Weekly Report 8/);
+  // The activity section must independently show eight newest task entries.
+  const recentStart = source.indexOf('function renderRecent() {');
+  assert.ok(recentStart >= 0 && recentStart < start);
+  const tasksElement = {innerHTML:''};
+  sandbox.$ = selector => selector === '#recent-updates' ? tasksElement : element;
+  sandbox.tasks = () => Array.from({length:10}, (_,i) => ({
+    id:String(i+1), title:'Task '+String(i+1),
+    phase:'01', updated_at:'2026-10-'+String(i+1).padStart(2,'0')+'T10:00:00+09:00'
+  }));
+  sandbox.phaseById = () => ({});
+  sandbox.phaseStyle = () => '';
+  vm.runInContext(source.slice(recentStart,start)+'\nrenderRecent();', sandbox);
+  assert.equal((tasksElement.innerHTML.match(/class="activity-item"/g)||[]).length,8);
+  assert.match(tasksElement.innerHTML, /Task 10/);
+  assert.match(tasksElement.innerHTML, /Task 3/);
+  assert.doesNotMatch(tasksElement.innerHTML, /Task 2/);
+  process.stdout.write('REPORT_FEED_AND_ACTIVITY_LATEST_EIGHT_PASS\n');
 })().catch(err=>{console.error(err); process.exitCode=1;});

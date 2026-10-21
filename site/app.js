@@ -248,11 +248,11 @@
     $('#board-view').innerHTML=`<div class="board-scroll"><div class="board" style="--columns:${keys.length}">${keys.map(key=>{const items=list.filter(t=>t.status===key);return `<section class="board-column" aria-label="${statuses[key].label}"><div class="board-title"><span class="${key}">${statuses[key].label}</span><b>${items.length}</b></div>${items.length?items.map(t=>`<button type="button" class="task-card" data-task="${escape(t.id)}" style="${phaseStyle(phaseById(t.phase))}"><div class="card-phase">${escape(phaseById(t.phase).title)}</div><strong>${escape(t.title)}</strong><div class="card-foot"><span${isOverdue(t)?' class="overdue-text"':''}>${t.end?dateLabel(t.end,true)+' 마감':'일정 미정'}</span><span class="avatar" title="${escape(t.assignees.join(', ')||'담당자 미지정')}">${escape(t.assignees[0]?.slice(0,2).toUpperCase()||'—')}</span></div></button>`).join(''):'<div class="board-empty">등록된 업무 없음</div>'}</section>`;}).join('')}</div></div>`;
   }
   function renderRecent() {
-    const recent=[...tasks()].sort((a,b)=>(Date.parse(b.updated_at)||0)-(Date.parse(a.updated_at)||0)).slice(0,3);
+    const recent=[...tasks()].sort((a,b)=>(Date.parse(b.updated_at)||0)-(Date.parse(a.updated_at)||0)).slice(0,8);
     $('#recent-updates').innerHTML=recent.length?recent.map(t=>`<button class="activity-item" type="button" data-task="${escape(t.id)}" style="${phaseStyle(phaseById(t.phase))}"><i class="activity-dot"></i><strong>${escape(t.title)}</strong><span>${escape(timestampLabel(t.updated_at))}</span></button>`).join(''):'<div class="activity-empty">실제 업무가 등록되면 최근 수정한 내용이 여기에 표시됩니다.</div>';
   }
   function renderReports() {
-    const recent = Array.isArray(reportSource.reports) ? reportSource.reports.slice(0,3) : [];
+    const recent = Array.isArray(reportSource.reports) ? reportSource.reports.slice(0,8) : [];
     const destination = $('#recent-reports');
     if (!destination) return;
     destination.innerHTML = recent.length ? recent.map(report => `<a class="activity-item report-activity" href="${escape(report.url)}" target="_blank" rel="noopener noreferrer"><i class="activity-dot"></i><strong>${escape(report.title)}</strong><span>${escape(timestampLabel(report.updated_at))}</span></a>`).join('') : '<div class="activity-empty">등록된 리포트가 없습니다. 작성한 HTML 파일을 GitHub의 reports/weekly/ 폴더에 업로드하세요.</div>';
@@ -272,7 +272,7 @@
         report && typeof report.title==='string' &&
         typeof report.url==='string' && report.url.startsWith(trustedPrefix) &&
         Number.isFinite(Date.parse(report.updated_at))
-      ).slice(0,3)};
+      ).slice(0,8)};
       renderReports();
     } catch {
       // Retain the preloaded JS snapshot as a fallback when the network is unavailable.

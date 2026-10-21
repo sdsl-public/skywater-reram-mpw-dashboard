@@ -260,10 +260,10 @@ def collect_reports():
 
 
 def report_items():
-    """Public-facing index contains metadata only, limited to three reports."""
+    """Public-facing index contains metadata only, limited to eight reports."""
     return [
         {key: item[key] for key in ("title", "updated_at", "url")}
-        for item in collect_reports()[:3]
+        for item in collect_reports()[:8]
     ]
 
 def main() -> None:
@@ -299,7 +299,7 @@ def main() -> None:
         )
     reports = [
         {key: item[key] for key in ("title", "updated_at", "url")}
-        for item in collected[:3]
+        for item in collected[:8]
     ]
     payload = json.dumps({"reports": reports}, ensure_ascii=True, separators=(",", ":"))
     (destination / REPORT_FEED).write_text(
