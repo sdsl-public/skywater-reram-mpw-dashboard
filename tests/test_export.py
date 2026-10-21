@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("export_issues", ROOT / "scripts" / "export_issues.py")
 exporter = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(exporter)
-REPOSITORY = "sdsl-public/skywater-reram-mpw-dashboard"
+REPOSITORY = "YOUR-OWNER/YOUR-PROJECT-REPO"
 BODY = """### 연구 단계
 
 03 · 회로·어레이 설계

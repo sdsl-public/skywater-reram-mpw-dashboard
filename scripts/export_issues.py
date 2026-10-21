@@ -109,7 +109,7 @@ def export_issue(issue: dict, warnings: list[dict]) -> dict | None:
 
 
 def api_get(path: str, token: str) -> object:
-    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "SDSL-MPW-Public-Dashboard"}
+    headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "Research-Public-Dashboard"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
     for attempt in range(3):
@@ -169,7 +169,7 @@ def write_snapshot(snapshot: dict, output: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repository", default=os.environ.get("GITHUB_REPOSITORY", "sdsl-public/skywater-reram-mpw-dashboard"))
+    parser.add_argument("--repository", default=os.environ.get("GITHUB_REPOSITORY", "YOUR-OWNER/YOUR-PROJECT-REPO"))
     parser.add_argument("--output", type=Path, default=Path("site/data.js"))
     parser.add_argument("--fixture", type=Path, help="Offline fixture, for tests only; never use for a production deployment")
     args = parser.parse_args()

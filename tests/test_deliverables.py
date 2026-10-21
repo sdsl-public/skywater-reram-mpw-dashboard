@@ -43,7 +43,7 @@ class DeliverableTests(unittest.TestCase):
         self.assertIn('class="section-top timeline-header"', html)
         self.assertNotIn('id="demo-toggle"', html)
         self.assertIn('id="new-report"', html)
-        self.assertIn('href="./skywater_weekly_report_template.html"', html)
+        self.assertIn('href="./weekly_report_template.html"', html)
         self.assertIn('id="recent-reports"', html)
         self.assertIn('id="summary-title"', html)
         self.assertIn('class="updates-panel summary-panel"', html)
@@ -79,7 +79,7 @@ class DeliverableTests(unittest.TestCase):
             result = {str(p.relative_to(root / '_site')) for p in (root / '_site').rglob('*') if p.is_file()}
             self.assertEqual(result, set(module.ASSETS) | {module.REPORT_FEED, module.REPORT_JSON})
             self.assertEqual(len(result), 19)
-            self.assertIn('skywater_weekly_report_template.html', result)
+            self.assertIn('weekly_report_template.html', result)
             self.assertIn('report-data.js', result)
             self.assertIn('window.DASHBOARD_REPORTS = ', (root / '_site/report-data.js').read_text())
             self.assertEqual(json.loads((root / '_site/report-data.json').read_text()), {"reports":[]})

@@ -9,7 +9,7 @@ const start = source.indexOf('function renderReports() {');
 const end = source.indexOf('function renderWorkspace() {', start);
 assert.ok(start >= 0 && end > start, 'Cannot locate report rendering and refresh functions');
 
-const base = 'https://sdsl-public.github.io/skywater-reram-mpw-dashboard/';
+const base = 'https://YOUR-OWNER.github.io/YOUR-PROJECT-REPO/';
 const valid = {
   title: 'Weekly Report · Sample',
   url: base + 'reports/weekly/2026-10/sample.html',
@@ -27,7 +27,7 @@ const invalid = {
 };
 const legacy = {
   title: 'Old GitHub file view',
-  url: 'https://github.com/sdsl-public/skywater-reram-mpw-dashboard/blob/main/reports/weekly/sample.html',
+  url: 'https://github.com/YOUR-OWNER/YOUR-PROJECT-REPO/blob/main/reports/weekly/sample.html',
   updated_at: valid.updated_at
 };
 const element = {innerHTML:''};

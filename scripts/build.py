@@ -2,6 +2,7 @@
 """Build only approved public dashboard assets and a safe weekly-report index."""
 from datetime import datetime, timedelta, timezone
 from html import escape as html_escape
+import os
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote
@@ -14,14 +15,20 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSETS = (
     "index.html", "styles.css", "theme.css", "app.js", "config.js", "data.js",
     "favicon.svg", ".nojekyll", "deliverables.js", "deliverables.css",
-    "skywater_weekly_report_template.html",
+    "weekly_report_template.html",
 ) + tuple(f"assets/timeline-icons/{number:02d}.webp" for number in range(1, 7))
 REPORT_DIR = Path("reports/weekly")
 REPORT_FEED = "report-data.js"
 REPORT_JSON = "report-data.json"
-PUBLIC_SITE = "https://sdsl-public.github.io/skywater-reram-mpw-dashboard/"
+# The workflow supplies GITHUB_REPOSITORY for every template-generated repository.
+# DASHBOARD_SITE_URL may optionally override the default Pages project URL.
+REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "YOUR-OWNER/YOUR-PROJECT-REPO")
+if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", REPOSITORY):
+    raise RuntimeError("GITHUB_REPOSITORY must be in owner/repository format")
+_owner, _name = REPOSITORY.split("/", 1)
+_site_path = "" if _name.lower() == f"{_owner}.github.io".lower() else f"{_name}/"
+PUBLIC_SITE = (os.environ.get("DASHBOARD_SITE_URL") or f"https://{_owner}.github.io/{_site_path}").rstrip("/") + "/"
 MAX_REPORT_BYTES = 8_000_000
-REPOSITORY = "sdsl-public/skywater-reram-mpw-dashboard"
 KST = timezone(timedelta(hours=9))
 
 
@@ -287,7 +294,7 @@ def main() -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source / name, target)
     collected = collect_reports()
-    template_head = (source / "skywater_weekly_report_template.html").read_text(
+    template_head = (source / "weekly_report_template.html").read_text(
         encoding="utf-8"
     ).split("</head>", 1)[0]
     for item in collected:

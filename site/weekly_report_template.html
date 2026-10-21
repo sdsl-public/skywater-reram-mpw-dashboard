@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="SkyWater ReRAM MPW 프로젝트용 간결한 Weekly Report 템플릿">
-  <title>Weekly Report · SkyWater ReRAM MPW</title>
+  <meta name="description" content="Research Project Dashboard 프로젝트용 간결한 Weekly Report 템플릿">
+  <title>Weekly Report · Research Project Dashboard</title>
   <style>
 :root{
   --ink:#1e1e1e;
@@ -219,6 +219,23 @@ noscript{display:block;padding:12px;text-align:center;background:#fff8df;font-si
 
 </head>
 <body>
+  <!-- The authoring form reads public branding only; saved reports are standalone. -->
+  <script src="./config.js" data-project-config></script>
+  <script data-project-metadata>
+  (() => {
+    const c=window.DASHBOARD_CONFIG;
+    if (!c) return;
+    const kicker=document.querySelector('.kicker');
+    if (kicker) {
+      kicker.replaceChildren(document.createTextNode(c.title||'Research Project Dashboard'),
+        document.createElement('br'),document.createTextNode('Weekly Report'));
+    }
+    const team=document.querySelector('.laboratory-footer');
+    if (team) team.textContent=c.organization||'Research Project Team';
+    document.title='Weekly Report · '+(c.title||'Research Project Dashboard');
+  })();
+  </script>
+
   <div class="editor screen-only" aria-label="보고서 편집 도구">
     <div class="editor-top">
       <div class="controls">
@@ -230,7 +247,7 @@ noscript{display:block;padding:12px;text-align:center;background:#fff8df;font-si
 
   <article class="sheet" id="report" aria-label="Weekly 보고서">
     <header>
-      <p class="kicker">SkyWater ReRAM MPW Project<br>Weekly Report</p>
+      <p class="kicker">Research Project Dashboard Project<br>Weekly Report</p>
       <div class="metadata">
         <div class="metadata-item author-item"><span class="metadata-label">작성자</span><span class="metadata-value field" id="author" contenteditable="plaintext-only" role="textbox" aria-label="작성자" data-single-line="true" data-empty="true" data-placeholder="이름"></span></div>
         <div class="metadata-item datetime-item"><span class="metadata-label">작성일시</span><span class="metadata-value field" id="written-at" contenteditable="plaintext-only" role="textbox" aria-label="작성일시 (한국 표준시)" data-single-line="true" data-empty="true" data-placeholder="YYYY.MM.DD HH:mm (KST)"></span><button class="mini-time screen-only" id="time-button" type="button" title="현재 KST 일시 입력">현재 일시 입력</button></div>
@@ -269,7 +286,7 @@ noscript{display:block;padding:12px;text-align:center;background:#fff8df;font-si
       </ol>
     </footer>
 
-    <div class="laboratory-footer">Semiconductor Device and System Laboratory</div>
+    <div class="laboratory-footer">Research Project Team</div>
 
   </article>
 
@@ -424,12 +441,15 @@ noscript{display:block;padding:12px;text-align:center;background:#fff8df;font-si
         // are embedded directly in the downloaded HTML file.
         const copy = document.documentElement.cloneNode(true);
 
+        // Saved reports must be standalone and never depend on the site config.
+        copy.querySelectorAll('script[data-project-config],script[data-project-metadata]').forEach(el=>el.remove());
+
         // Do not include the outside helper text in saved HTML.
         const savedGuide = copy.querySelector('.outside-guide');
         if (savedGuide) savedGuide.remove();
         const authorName = text($('author')) || '작성자';
         const writtenAt = text($('written-at')) || '날짜미정';
-        const reportName = `SkyWater ReRAM MPW Weekly Report · ${authorName} · ${writtenAt}`;
+        const reportName = `${window.DASHBOARD_CONFIG?.title || 'Research Project Dashboard'} Weekly Report · ${authorName} · ${writtenAt}`;
 
         copy.querySelector('title').textContent = reportName;
 
@@ -469,7 +489,7 @@ noscript{display:block;padding:12px;text-align:center;background:#fff8df;font-si
           .replace(/[\\/:*?"<>|\u0000-\u001f]/g, '-')
           .replace(/\s+/g, '_')
           .slice(0, 100)
-          .replace(/[. _-]+$/g, '') || 'SkyWater_Weekly_Report';
+          .replace(/[. _-]+$/g, '') || 'Research_Weekly_Report';
 
         const anchor = document.createElement('a');
         anchor.href = url;

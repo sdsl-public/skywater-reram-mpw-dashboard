@@ -81,11 +81,11 @@ jobs:
               'styles.css': 'font-size:18px',
               'theme.css': 'Urbanist',
               'app.js': 'projectEndExclusive',
-              'config.js': "projectEnd: '2027-09-30'",
+              'config.js': 'window.DASHBOARD_CONFIG',
               'data.js': 'github-issues',
               'report-data.js': 'window.DASHBOARD_REPORTS = ',
               'report-data.json': '"reports":',
-              'skywater_weekly_report_template.html': 'Weekly Report',
+              'weekly_report_template.html': 'Weekly Report',
               'deliverables.js': 'phase-deliverable',
               'deliverables.css': 'width:44px',
           }
