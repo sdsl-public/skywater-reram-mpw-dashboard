@@ -9,7 +9,7 @@ const start = source.indexOf('function renderReports() {');
 const end = source.indexOf('function renderWorkspace() {', start);
 assert.ok(start >= 0 && end > start, 'Cannot locate report rendering and refresh functions');
 
-const base = 'https://YOUR-OWNER.github.io/YOUR-PROJECT-REPO/';
+const base = 'https://example.github.io/new-research-dashboard/';
 const valid = {
   title: 'Weekly Report · Sample',
   url: base + 'reports/weekly/2026-10/sample.html',
