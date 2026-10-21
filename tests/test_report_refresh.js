@@ -40,7 +40,7 @@ const sandbox = {
   reportLoadState:'loading',
   document:{baseURI:base, hidden:false, addEventListener:(event,fn)=>{handlers[event]=fn;}},
   window:{addEventListener:(event,fn)=>{handlers[event]=fn;},setInterval:(fn,ms)=>{assert.equal(ms,60000);handlers.periodic=fn;return 1;}},
-  repositoryUrl:'https://github.com/sdsl-public/skywater-reram-mpw-dashboard',
+  repositoryUrl:'https://github.com/example/new-research-dashboard',
   URL, Date,
   $: selector => selector === '#recent-reports' ? element : null,
   escape: value => String(value).replace(/[&<>"']/g, c => ({
