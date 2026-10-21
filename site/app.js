@@ -152,7 +152,7 @@
       {name:'진행 중',icon:'progress',value:inProgress,unit:'개',sub:`검토 중 ${review} · 보류 ${blocked}`},
       {name:'기한 초과',icon:'calendar',value:overdue,unit:'개',sub:active.length===0?'업무 일정 등록 대기':overdue?`미완료 업무 ${overdue}개 확인 필요`:'기한을 넘긴 업무가 없습니다',warn:overdue>0}
     ];
-    $('#metrics').innerHTML=cards.map(c=>`<div class="summary-stat"><div class="summary-stat-heading"><span>${c.name}${state.demo?' · 예시':''}</span>${icon(c.icon)}</div><div class="summary-stat-content"><strong class="summary-stat-value${c.warn?' summary-stat-warning':''}">${c.value}<small>${c.unit}</small></strong><span class="summary-stat-note">${c.sub}</span></div></div>`).join('');
+    $('#metrics').innerHTML=cards.map(c=>`<div class="summary-stat"><span class="summary-stat-label">${c.name}${state.demo?' · 예시':''}</span><strong class="summary-stat-value${c.warn?' summary-stat-warning':''}">${c.value}<small>${c.unit}</small></strong><span class="summary-stat-note" title="${escape(c.sub)}">${escape(c.sub)}</span><span class="summary-stat-icon" aria-hidden="true">${icon(c.icon)}</span></div>`).join('');
   }
   function renderDataStatus() {
     $('#demo-banner').hidden=!state.demo;
