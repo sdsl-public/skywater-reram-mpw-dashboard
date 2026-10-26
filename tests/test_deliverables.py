@@ -78,7 +78,8 @@ class DeliverableTests(unittest.TestCase):
             module.main()
             result = {str(p.relative_to(root / '_site')) for p in (root / '_site').rglob('*') if p.is_file()}
             self.assertEqual(result, set(module.ASSETS) | {module.REPORT_FEED, module.REPORT_JSON})
-            self.assertEqual(len(result), 19)
+            self.assertEqual(len(result), 20)
+            self.assertIn('project-team.js', result)
             self.assertIn('skywater_weekly_report_template.html', result)
             self.assertIn('report-data.js', result)
             self.assertIn('window.DASHBOARD_REPORTS = ', (root / '_site/report-data.js').read_text())
