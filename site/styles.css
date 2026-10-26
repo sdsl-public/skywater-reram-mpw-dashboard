@@ -354,3 +354,30 @@
   .site-footer .copyright-notice{justify-self:center}
   .site-footer>a{justify-self:end}
 }
+
+/* Project Team dialog, aligned with the existing dark dashboard theme. */
+.site-footer .project-team-trigger{
+  justify-self:end;display:inline-flex;align-items:center;gap:8px;
+  padding:6px 0;color:inherit;font:inherit;cursor:pointer;white-space:nowrap;
+}
+.site-footer .project-team-trigger:hover,.site-footer .project-team-trigger:focus-visible{color:var(--accent)}
+.site-footer .project-team-trigger svg{width:14px;height:14px}
+#project-team-dialog{
+  width:min(480px,calc(100vw - 32px));max-width:calc(100vw - 32px);
+  max-height:min(80dvh,650px);height:auto;margin:auto;inset:0;
+  padding:28px;border-radius:10px;overflow:auto;
+}
+#project-team-dialog .dialog-top{margin-bottom:24px}
+#project-team-dialog h2{margin:0;font-size:25px;font-weight:400;letter-spacing:-.03em}
+#project-team-dialog .project-team-empty{color:var(--muted);font-size:14px;line-height:1.8}
+#project-team-dialog .project-team-members{list-style:none;margin:0;padding:0}
+#project-team-dialog .project-team-members li{
+  display:flex;justify-content:space-between;align-items:baseline;
+  flex-wrap:wrap;gap:8px 24px;padding:15px 0;border-bottom:1px solid var(--line)
+}
+#project-team-dialog .project-team-members strong{font-size:15px;font-weight:500}
+#project-team-dialog .project-team-members span{color:var(--muted);font-size:13px}
+@media screen and (max-width:760px){
+  .site-footer .project-team-trigger{margin-left:auto}
+  #project-team-dialog{padding:22px}
+}
