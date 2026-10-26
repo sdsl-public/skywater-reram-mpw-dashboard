@@ -36,6 +36,7 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -v
           node --check site/app.js
+          node --check site/project-team.js
           node tests/test_report_refresh.js
           node tests/test_summary_layout.js
           node --check site/config.js
