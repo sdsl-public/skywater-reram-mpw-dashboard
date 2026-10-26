@@ -7,7 +7,7 @@ window.DASHBOARD_CONFIG = Object.freeze({
   projectTeam: [
     { name: 'Min-Hwi Kim', role: 'Project Manager' },
     { name: 'Suhan Kim', role: 'Project Lead' },
-    { name: 'Hyoseob Kim', role: 'Core Design' },
+    { name: 'Hyoseob Kim', role: 'Memory Core Design' },
     { name: 'Wonki Hong', role: 'Circuit Design' },
     { name: 'Junha Jang', role: 'Device Modeling' },
     { name: 'Seung Hwan Jeong', role: 'Layout & verification' },
