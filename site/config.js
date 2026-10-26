@@ -5,9 +5,11 @@ window.DASHBOARD_CONFIG = Object.freeze({
   timezone: 'Asia/Seoul',
   // Public team members: {name: 'Name', role: 'Role'}. Leave empty until confirmed.
   projectTeam: [
-  { name: '홍길동', role: 'Project Lead' },
-  { name: '김철수', role: 'Circuit Design' },
-  { name: '이영희', role: 'Device Modeling' }
+  { name: 'Min-Hwi Kim', role: 'Project Lead' },
+  { name: 'Wonki Hong', role: 'Circuit Design' },
+  { name: 'Junha Jang', role: 'Device Modeling' },
+    { name: 'Seung Hwan Jeong', role: 'Device Modeling' },
+    { name: 'Hyeon Seong Cho', role: 'Device Modeling' },
   ],
   // Fixed public project window. Individual Issue dates are not rewritten.
   projectStart: '2026-10-01',
