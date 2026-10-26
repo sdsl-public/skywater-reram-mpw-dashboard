@@ -10,8 +10,8 @@ window.DASHBOARD_CONFIG = Object.freeze({
     { name: 'Hyoseob Kim', role: 'Project Advisor' },
     { name: 'Wonki Hong', role: 'Circuit Design' },
     { name: 'Junha Jang', role: 'Device Modeling' },
-    { name: 'Seung Hwan Jeong', role: 'Layout & verification' },
-    { name: 'Hyeon Seong Cho', role: 'Characterization & analysis' },
+    { name: 'Seung Hwan Jeong', role: 'Layout & Verification' },
+    { name: 'Hyeon Seong Cho', role: 'Characterization & Analysis' },
   ],
   // Fixed public project window. Individual Issue dates are not rewritten.
   projectStart: '2026-10-01',
