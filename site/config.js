@@ -5,9 +5,11 @@ window.DASHBOARD_CONFIG = Object.freeze({
   timezone: 'Asia/Seoul',
   // Public team members: {name: 'Name', role: 'Role'}. Leave empty until confirmed.
   projectTeam: [
-  { name: 'Min-Hwi Kim', role: 'Project Lead' },
-  { name: 'Wonki Hong', role: 'Circuit Design' },
-  { name: 'Junha Jang', role: 'Device Modeling' },
+    { name: 'Min-Hwi Kim', role: 'Project Manager' },
+    { name: 'Suhan Kim', role: 'Project Lead' },
+    { name: 'Hyoseob Kim', role: 'Core Design' },
+    { name: 'Wonki Hong', role: 'Circuit Design' },
+    { name: 'Junha Jang', role: 'Device Modeling' },
     { name: 'Seung Hwan Jeong', role: 'Layout & verification' },
     { name: 'Hyeon Seong Cho', role: 'Characterization & analysis' },
   ],
