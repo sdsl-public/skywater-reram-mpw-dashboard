@@ -4,7 +4,11 @@ window.DASHBOARD_CONFIG = Object.freeze({
   title: 'SkyWater ReRAM MPW',
   timezone: 'Asia/Seoul',
   // Public team members: {name: 'Name', role: 'Role'}. Leave empty until confirmed.
-  projectTeam: [],
+  projectTeam: [
+  { name: '홍길동', role: 'Project Lead' },
+  { name: '김철수', role: 'Circuit Design' },
+  { name: '이영희', role: 'Device Modeling' }
+  ],
   // Fixed public project window. Individual Issue dates are not rewritten.
   projectStart: '2026-10-01',
   projectEnd: '2027-09-30',
