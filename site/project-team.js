@@ -17,11 +17,17 @@
     for(const member of members){
       if(!member||typeof member.name!=='string'||!member.name.trim())continue;
       const li=document.createElement('li');
+      const nameGroup=document.createElement('span');
+      nameGroup.className='project-team-member-name';
+      // Static SVG markup; member-provided text is inserted via textContent.
+      nameGroup.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg>';
       const name=document.createElement('strong');
       name.textContent=member.name;
-      li.append(name);
+      nameGroup.append(name);
+      li.append(nameGroup);
       if(typeof member.role==='string'&&member.role.trim()){
         const role=document.createElement('span');
+        role.className='project-team-member-role';
         role.textContent=member.role;
         li.append(role);
       }
