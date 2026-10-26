@@ -6,8 +6,8 @@ window.DASHBOARD_CONFIG = Object.freeze({
   // Public team members: {name: 'Name', role: 'Role'}. Leave empty until confirmed.
   projectTeam: [
     { name: 'Min-Hwi Kim', role: 'Project Manager' },
-    { name: 'Suhan Kim', role: 'Project Lead' },
-    { name: 'Hyoseob Kim', role: 'Memory Core Design' },
+    { name: 'Suhan Kim', role: 'Project Advisor' },
+    { name: 'Hyoseob Kim', role: 'Project Advisor' },
     { name: 'Wonki Hong', role: 'Circuit Design' },
     { name: 'Junha Jang', role: 'Device Modeling' },
     { name: 'Seung Hwan Jeong', role: 'Layout & verification' },
