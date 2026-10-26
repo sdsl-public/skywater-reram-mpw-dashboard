@@ -342,3 +342,15 @@
     text-align:center;
   }
 }
+
+/* Keep the copyright at the exact center of the footer, independent of side-label lengths. */
+@media screen and (min-width:761px){
+  .site-footer{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+    align-items:center;
+  }
+  .site-footer>span:first-child{min-width:0;overflow-wrap:anywhere}
+  .site-footer .copyright-notice{justify-self:center}
+  .site-footer>a{justify-self:end}
+}
