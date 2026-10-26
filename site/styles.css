@@ -381,3 +381,16 @@
   .site-footer .project-team-trigger{margin-left:auto}
   #project-team-dialog{padding:22px}
 }
+
+/* A single-person icon next to each registered Project Team member. */
+#project-team-dialog .project-team-members li{align-items:center}
+#project-team-dialog .project-team-member-name{
+  display:inline-flex;align-items:center;gap:10px;min-width:0;
+  color:var(--text);font-size:15px;
+}
+#project-team-dialog .project-team-member-name svg{
+  display:block;flex:0 0 18px;width:18px;height:18px;color:var(--accent);
+}
+#project-team-dialog .project-team-members .project-team-member-role{
+  color:var(--muted);font-size:13px;
+}
