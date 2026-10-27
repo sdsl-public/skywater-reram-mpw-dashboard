@@ -6,6 +6,23 @@
 - 디자인 예시: https://sdsl-public.github.io/skywater-reram-mpw-dashboard/?demo=1
 - 업무 등록: https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/new?template=task.yml
 
+## 주요 웹사이트 링크 관리
+
+대시보드의 **업무 현황 / 최근 업무 업데이트 / 최근 리포트 업데이트** 아래에
+**주요 웹사이트 (QUICK LINKS)**가 표시됩니다. `site/config.js`의 `projectLinks`를
+직접 편집하여 링크 이름과 URL, 짧은 설명을 수정하거나 추가·삭제할 수 있습니다.
+
+```javascript
+projectLinks: [
+  {name: 'Project Repository', url: 'https://github.com/sdsl-public/skywater-reram-mpw-dashboard', description: 'Source code and documentation'},
+  {name: 'Research Laboratory', url: 'https://sdsl.cau.ac.kr/', description: 'Semiconductor Device and System Laboratory'},
+],
+```
+
+`name`과 `url`은 필수이며 `description`은 선택입니다. HTTP(S) 주소만 허용하고 새 탭에서 열립니다.
+등록 순서는 화면 표시 순서와 같습니다. 수정 후 GitHub에 커밋하면 자동으로 다시 배포됩니다.
+**이곳은 공개 대시보드이므로 비공개 링크나 민감한 정보를 등록하지 마세요.**
+
 ## 사용 방법
 
 1. 프로젝트 업무 양식으로 Issue를 작성합니다. 날짜가 미정이면 비워 둡니다.
