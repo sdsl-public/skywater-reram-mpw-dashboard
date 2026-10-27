@@ -17,7 +17,7 @@ window.DASHBOARD_CONFIG = Object.freeze({
   // Edit/add/remove entries using {name, url, description (optional)}.
   projectLinks: [
     {name: 'SkyWater SKY130 PDK', url: 'https://skywater-pdk.readthedocs.io/en/main/index.html', description: 'https://skywater-pdk.readthedocs.io/en/main/index.html'},
-    {name: 'ReRAM PDK', url: 'https://sky130-fd-pr-reram.readthedocs.io/en/latest/index.html', description: 'https://sky130-fd-pr-reram.readthedocs.io/en/latest/index.html'},
+    {name: 'SkyWater ReRAM 130nm PDK', url: 'https://sky130-fd-pr-reram.readthedocs.io/en/latest/index.html', description: 'https://sky130-fd-pr-reram.readthedocs.io/en/latest/index.html'},
   ],
   // Fixed public project window. Individual Issue dates are not rewritten.
   projectStart: '2026-10-01',
