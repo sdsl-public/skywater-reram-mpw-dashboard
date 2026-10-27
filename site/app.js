@@ -373,5 +373,49 @@
   fullButton.type='button';fullButton.dataset.scale='full';fullButton.textContent='전체';
   fullButton.setAttribute('aria-label','프로젝트 전체 기간 보기');
   $('.scale-switch').prepend(fullButton);
+  // Only publish explicit HTTP(S) website links from the public config file.
+  function renderProjectLinks(){
+    const container=$('#project-links-list');
+    if(!container)return;
+    const entries=Array.isArray(config.projectLinks)?config.projectLinks:[];
+    let count=0;
+    for(const item of entries){
+      if(!item||typeof item.name!=='string'||!item.name.trim()||typeof item.url!=='string')continue;
+      let url;
+      try{
+        url=new URL(item.url);
+        if(!['https:','http:'].includes(url.protocol)||!url.hostname||url.username||url.password)continue;
+      }catch{continue;}
+      const link=document.createElement('a');
+      link.className='project-link-card';
+      link.href=url.href;
+      link.target='_blank';
+      link.rel='noopener noreferrer';
+      const content=document.createElement('span');
+      content.className='project-link-content';
+      const name=document.createElement('strong');
+      name.textContent=item.name.trim();
+      content.append(name);
+      if(typeof item.description==='string'&&item.description.trim()){
+        const description=document.createElement('small');
+        description.textContent=item.description.trim();
+        content.append(description);
+      }
+      const arrow=document.createElement('span');
+      arrow.className='project-link-arrow';
+      arrow.setAttribute('aria-hidden','true');
+      arrow.textContent='↗';
+      link.append(content,arrow);
+      container.append(link);
+      count++;
+    }
+    if(!count){
+      const empty=document.createElement('p');
+      empty.className='project-links-empty';
+      empty.textContent='등록된 웹사이트가 없습니다. site/config.js의 projectLinks에서 링크를 추가하세요.';
+      container.append(empty);
+    }
+  }
+  renderProjectLinks();
   renderIcons();renderAll();startReportUpdates();
 })();
