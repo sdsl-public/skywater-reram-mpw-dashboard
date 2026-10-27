@@ -394,3 +394,26 @@
 #project-team-dialog .project-team-members .project-team-member-role{
   color:var(--muted);font-size:13px;
 }
+
+/* A shared research-team quotation below the member list. */
+#project-team-dialog .project-team-quote{
+  border-top:1px solid var(--line);
+  margin:24px 0 0;
+  padding:22px 8px 0;
+  text-align:center;
+}
+#project-team-dialog .project-team-quote blockquote{
+  margin:0 auto;
+  max-width:390px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:400;
+  font-style:italic;
+  line-height:1.85;
+}
+#project-team-dialog .project-team-quote figcaption{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+}
