@@ -16,8 +16,8 @@ window.DASHBOARD_CONFIG = Object.freeze({
   // Public website links shown below the dashboard update panels.
   // Edit/add/remove entries using {name, url, description (optional)}.
   projectLinks: [
-    {name: 'Project Repository', url: 'https://github.com/sdsl-public/skywater-reram-mpw-dashboard', description: 'Source code and documentation'},
-    {name: 'Research Laboratory', url: 'https://sdsl.cau.ac.kr/', description: 'Semiconductor Device and System Laboratory'},
+    {name: 'SkyWater SKY130 PDK', url: 'https://skywater-pdk.readthedocs.io/en/main/index.html', description: 'https://skywater-pdk.readthedocs.io/en/main/index.html'},
+    {name: 'ReRAM PDK', url: 'https://sky130-fd-pr-reram.readthedocs.io/en/latest/index.html', description: 'https://sky130-fd-pr-reram.readthedocs.io/en/latest/index.html'},
   ],
   // Fixed public project window. Individual Issue dates are not rewritten.
   projectStart: '2026-10-01',
