@@ -13,6 +13,12 @@ window.DASHBOARD_CONFIG = Object.freeze({
     { name: 'Seung Hwan Jeong', role: 'Layout & Verification' },
     { name: 'Hyeon Seong Cho', role: 'Characterization & Analysis' },
   ],
+  // Public website links shown below the dashboard update panels.
+  // Edit/add/remove entries using {name, url, description (optional)}.
+  projectLinks: [
+    {name: 'Project Repository', url: 'https://github.com/sdsl-public/skywater-reram-mpw-dashboard', description: 'Source code and documentation'},
+    {name: 'Research Laboratory', url: 'https://sdsl.cau.ac.kr/', description: 'Semiconductor Device and System Laboratory'},
+  ],
   // Fixed public project window. Individual Issue dates are not rewritten.
   projectStart: '2026-10-01',
   projectEnd: '2027-09-30',
