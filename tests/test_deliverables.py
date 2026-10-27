@@ -77,6 +77,22 @@ class DeliverableTests(unittest.TestCase):
         self.assertIn('— Helen Keller', html)
         self.assertIn('#project-team-dialog .project-team-quote', css)
 
+    def test_project_links_follow_status_panels_and_are_configurable(self):
+        html = (ROOT / 'site/index.html').read_text(encoding='utf-8')
+        js = (ROOT / 'site/app.js').read_text(encoding='utf-8')
+        config = (ROOT / 'site/config.js').read_text(encoding='utf-8')
+        css = (ROOT / 'site/styles.css').read_text(encoding='utf-8')
+        self.assertLess(html.index('id="recent-reports"'), html.index('id="project-links-list"'))
+        self.assertLess(html.index('id="project-links-list"'), html.index('class="public-notice"'))
+        self.assertIn('projectLinks: [', config)
+        self.assertIn('function renderProjectLinks()', js)
+        self.assertIn('new URL(item.url)', js)
+        self.assertIn("link.rel='noopener noreferrer'", js)
+        self.assertIn('name.textContent=item.name.trim()', js)
+        self.assertIn('description.textContent=item.description.trim()', js)
+        self.assertIn('renderProjectLinks();', js)
+        self.assertIn('.project-links-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))', css)
+
     def test_build_copies_only_allowlisted_files(self):
         module = builder()
         with tempfile.TemporaryDirectory() as directory:
