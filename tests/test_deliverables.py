@@ -68,6 +68,15 @@ class DeliverableTests(unittest.TestCase):
         self.assertIn('{childList: true}', text)
         self.assertNotIn('subtree: true', text)
 
+
+    def test_project_team_quote_is_below_members(self):
+        html = (ROOT / 'site/index.html').read_text(encoding='utf-8')
+        css = (ROOT / 'site/styles.css').read_text(encoding='utf-8')
+        self.assertIn('id="project-team-list"></div><figure class="project-team-quote"', html)
+        self.assertIn('Alone we can do so little; together we can do so much.', html)
+        self.assertIn('— Helen Keller', html)
+        self.assertIn('#project-team-dialog .project-team-quote', css)
+
     def test_build_copies_only_allowlisted_files(self):
         module = builder()
         with tempfile.TemporaryDirectory() as directory:
