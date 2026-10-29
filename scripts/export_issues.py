@@ -22,6 +22,7 @@ PHASES = {"00", "01", "02", "03", "04", "05", "06"}
 OPEN_STATUSES = {"planned", "in-progress", "review", "blocked"}
 REPO_PATTERN = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\Z")
 API_ROOT = "https://api.github.com"
+TASK_CODE_PATTERN = re.compile(r"0[0-6]-(?!000)[0-9]{3}\Z")
 
 
 def sections(body: str) -> dict[str, str]:
@@ -49,6 +50,23 @@ def parse_date(value: str, number: int, field: str, warnings: list[dict]) -> str
         return None
 
 
+def task_identity(issue: dict, values: dict[str, str], phase: str) -> tuple[str | None, str]:
+    """Read a persistent phase-local code, never derive it from list position."""
+    title = re.sub(r"^\[TASK\]\s*", "", str(issue.get("title") or "제목 없음"), flags=re.I).strip()
+    match = re.match(r"^(?:\[([0-9]{2}-[0-9]{3})\]|([0-9]{2}-[0-9]{3}))(?:\s+|$)(.*)$", title, re.S)
+    title_code = (match.group(1) or match.group(2)) if match else ""
+    field_code = values.get("업무 번호", "").strip()
+    if field_code and title_code and field_code != title_code:
+        raise ValueError(f"Issue #{issue['number']}: task code differs between title and 업무 번호")
+    code = field_code or title_code
+    if code:
+        if not TASK_CODE_PATTERN.fullmatch(code) or code[:2] != phase:
+            raise ValueError(f"Issue #{issue['number']}: invalid task code {code!r}; use {phase}-001 through {phase}-999")
+        if match:
+            title = match.group(3).strip() or "제목 없음"
+    return code or None, title[:300]
+
+
 def export_issue(issue: dict, warnings: list[dict]) -> dict | None:
     """Return a compact task. All unlisted fields, comments and attachments are dropped."""
     if "pull_request" in issue:
@@ -63,6 +81,7 @@ def export_issue(issue: dict, warnings: list[dict]) -> dict | None:
     phase = values.get("연구 단계", "")[:2]
     if phase not in PHASES:
         phase = "00"
+    task_code, title = task_identity(issue, values, phase)
     if issue.get("state") == "closed":
         status = "cancelled" if issue.get("state_reason") in {"not_planned", "duplicate"} else "done"
     else:
@@ -99,7 +118,7 @@ def export_issue(issue: dict, warnings: list[dict]) -> dict | None:
     assignees = [str(person["login"])[:100] for person in issue.get("assignees", []) if person.get("login")][:20]
     return {
         "id": f"issue-{number}", "number": number,
-        "title": re.sub(r"^\[TASK\]\s*", "", str(issue.get("title") or "제목 없음"), flags=re.I)[:300],
+        "task_code": task_code, "title": title,
         "phase": phase, "status": status,
         "kind": "milestone" if values.get("업무 유형", "").startswith("milestone") else "task",
         "start": start, "end": end, "progress": progress, "progress_source": progress_source,
@@ -153,7 +172,14 @@ def make_snapshot(issues: list[dict], repository: str, *, origin: str = "github-
         task = export_issue(issue, warnings)
         if task is not None:
             by_number[task["number"]] = task
-    tasks = sorted(by_number.values(), key=lambda t: (t["phase"], t["start"] or "9999-12-31", t["number"]))
+    by_code = {}
+    for task in by_number.values():
+        code = task["task_code"]
+        if code:
+            if code in by_code:
+                raise ValueError(f"Duplicate task code {code}: Issues #{by_code[code]} and #{task['number']}")
+            by_code[code] = task["number"]
+    tasks = sorted(by_number.values(), key=lambda t: (t["phase"], t["task_code"] or "~", t["start"] or "9999-12-31", t["number"]))
     return {"schema_version": 1, "repository": repository,
             "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
             "source": origin, "tasks": tasks, "warnings": warnings}
