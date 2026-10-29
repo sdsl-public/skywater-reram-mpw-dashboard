@@ -2,51 +2,78 @@
 
 ## 번호 형식과 원본 연결
 
-대시보드의 업무 번호는 `PP-NNN` 형식입니다. `PP`는 연구 단계의 두 자리 번호(01~06, 미분류는 00), `NNN`은 그 단계 안의 세 자리 순번(001~999)입니다.
+대시보드의 업무 번호는 `PP-NNN` 형식입니다. `PP`는 연구 단계의 두 자리 번호(01~06, 미분류는 00), `NNN`은 그 단계 안의 세 자리 번호(001~999)입니다.
 
-GitHub의 원래 Issue 번호와 URL은 변경하지 않습니다. 예를 들어 `01-001`은 [Issue #2](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/2)에 연결됩니다. 기존 댓글, 담당자, 일정, 상태, 진행률 및 관련 Issue 링크를 보존합니다.
+**주요 업무는 `010, 020, 030…`처럼 10단위로 배정합니다.** 중간에 업무를 추가할 때는 `010`과 `020` 사이의 `015`처럼 미사용 번호를 배정합니다. 10의 배수만 허용하는 것은 아니므로 중간 번호도 기존 검증·정렬 기능을 그대로 사용할 수 있습니다.
 
-타임라인, 업무 목록, 칸반, 최근 업무 업데이트와 상세 팝업에는 프로젝트 업무 번호를 표시합니다. 번호로 검색할 수 있으며 기본 업무 정렬은 연구 단계와 업무 번호 순입니다. 최근 업데이트는 기존처럼 최근 수정 시각 순으로 표시합니다.
+GitHub의 원래 Issue 번호와 URL은 변경하지 않습니다. 예를 들어 `01-010`은 [Issue #2](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/2)에 연결됩니다. 기존 댓글, 담당자, 일정, 상태, 진행률 및 관련 Issue 링크를 보존합니다.
+
+타임라인, 업무 목록, 칸반, 최근 업무 업데이트와 상세 팝업에는 프로젝트 업무 번호를 표시합니다. 번호로 검색할 수 있으며 기본 업무 정렬은 연구 단계와 업무 번호 순입니다. 칸반은 상태별 열 안에서 이 순서를 사용합니다. 최근 업데이트는 기존처럼 최근 수정 시각 순으로 표시합니다. 번호 변경은 세로 배치 순서에 영향을 주지만, 타임라인 막대의 가로 위치·길이는 시작일·종료일로 결정됩니다.
 
 ## 현재 번호표
 
+2026-10-29의 10단위 번호 전환 기준입니다.
+
 | 업무 번호 | 업무명 | 원본 GitHub Issue |
 |---|---|---|
-| 01-001 | ReRAM 칩 관련 자료 수집 | [#2](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/2) |
-| 01-002 | ReRAM 칩 스펙 설정 | [#1](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/1) |
-| 02-001 | EDA Environment Setup | [#3](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/3) |
-| 02-002 | PDK Setup & Validation | [#8](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/8) |
-| 02-003 | Device & ReRAM Model Validation | [#9](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/9) |
-| 02-004 | RTL Verification & Synthesis Setup | [#10](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/10) |
-| 02-005 | Layout & Verification Flow Setup | [#11](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/11) |
-| 03-001 | Fullchip RTL Design | [#4](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/4) |
-| 03-002 | Peripheral Circuit Design | [#5](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/5) |
-| 03-003 | ReRAM Array Design | [#6](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/6) |
-| 03-004 | Fullchip Integration | [#7](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/7) |
+| 01-010 | ReRAM 칩 관련 자료 수집 | [#2](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/2) |
+| 01-020 | ReRAM 칩 스펙 설정 | [#1](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/1) |
+| 02-010 | EDA Environment Setup | [#3](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/3) |
+| 02-020 | PDK Setup & Validation | [#8](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/8) |
+| 02-030 | Device & ReRAM Model Validation | [#9](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/9) |
+| 02-040 | RTL Verification & Synthesis Setup | [#10](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/10) |
+| 02-050 | Layout & Verification Flow Setup | [#11](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/11) |
+| 03-010 | Fullchip RTL Design | [#4](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/4) |
+| 03-020 | Peripheral Circuit Design | [#5](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/5) |
+| 03-030 | ReRAM Array Design | [#6](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/6) |
+| 03-040 | Fullchip Integration | [#7](https://github.com/sdsl-public/skywater-reram-mpw-dashboard/issues/7) |
 
-기존 `EDA 설치` Issue #3을 `02-001 EDA Environment Setup`으로 확장하고 `02-002`~`02-005` 네 업무를 새로 등록했습니다. 기존 #3의 일정은 유지했습니다. 신규 네 업무는 대기 / 진행률 0% / 일정·담당자 미정으로 등록했습니다.
+기존 `EDA 설치` Issue #3을 EDA Environment Setup으로 확장하고, 나머지 02단계 네 업무를 추가한 구성은 유지합니다. 이번 번호 전환에서는 업무를 새로 생성하거나 삭제하지 않았으며, 일정·담당자·상태·진행률·체크리스트는 변경하지 않았습니다. 제목, 본문의 업무 번호 및 업무 번호를 사용한 참조 문구만 갱신했습니다.
 
 ## 새 업무 등록
 
-1. 해당 단계의 열린 업무와 종료된 업무를 모두 확인하고 마지막 사용 번호 다음 순번을 정합니다. 번호는 자동 발급되지 않습니다.
-2. 업무 등록 양식의 **연구 단계**와 **업무 번호**를 입력합니다. 예: 단계 `02`, 업무 번호 `02-006`.
-3. 제목은 `[TASK] 02-006 업무명` 형식을 권장합니다. 제목과 업무 번호 필드를 모두 사용하면 두 값이 같아야 합니다.
-4. 관리자가 공개 내용을 확인한 뒤 `dashboard` 라벨을 붙이면 대시보드에 게시됩니다.
+1. 해당 단계의 열린·종료된 업무, 미승인 업무 및 아래 변경 이력을 모두 확인합니다. 과거에 사용한 번호는 재사용하지 않습니다. 번호는 자동 발급되지 않습니다.
+2. **끝에 추가:** 마지막 사용 번호보다 큰 다음 10단위 번호를 선택합니다. 예: `02-050` 다음은 `02-060`, `02-055`가 마지막이면 `02-060`.
+3. **중간에 추가:** 양옆 업무 번호 사이의 미사용 번호를 선택합니다. 예: `01-010`과 `01-020` 사이에는 `01-015`, 그 사이에 다시 추가할 때는 `01-012` 등. 예시 번호도 실제 사용 여부를 먼저 확인합니다.
+4. 업무 등록 양식의 **연구 단계**와 **업무 번호**를 입력합니다. 예: 단계 `02`, 업무 번호 `02-060`.
+5. 제목은 `[TASK] 02-060 업무명` 형식을 권장합니다. 제목과 업무 번호 필드를 모두 사용하면 두 값이 같아야 합니다.
+6. 관리자가 공개 내용을 확인한 뒤 `dashboard` 라벨을 붙이면 대시보드에 게시됩니다.
 
-이 번호표 작성 시점의 다음 번호는 `01-003`, `02-006`, `03-005`입니다. 04~06단계의 첫 업무는 각각 `04-001`, `05-001`, `06-001`부터 시작합니다. 등록 전에 실제 Issue 목록을 다시 확인하세요.
+이 번호표 작성 시점에 끝에 추가할 다음 번호는 **`01-030`, `02-060`, `03-050`**입니다. 04~06단계의 첫 주요 업무는 각각 **`04-010`, `05-010`, `06-010`**부터 시작합니다. 등록 전에 실제 Issue 목록과 변경 이력을 다시 확인하세요.
+
+중간에 미사용 정수 번호가 남지 않거나 999를 넘게 되면 임의로 중복 번호나 네 자리 번호를 만들지 않습니다. 관리자와 별도 표시 순서 도입 또는 번호 체계 조정을 먼저 검토합니다.
 
 ## 유지 규칙
 
-- 완료·취소·정렬·일정 변경으로 기존 번호를 바꾸지 않습니다. 종료된 업무 번호도 다시 사용하지 않습니다.
+- 완료·취소·정렬·일정 변경으로 기존 번호를 자동 재배정하지 않습니다. 종료된 업무 번호와 변경 전 번호도 다시 사용하지 않습니다.
 - 번호는 화면의 행 위치나 GitHub Issue 생성 순서에서 매번 계산하지 않고, Issue 제목 또는 본문의 `### 업무 번호`에 저장된 값을 사용합니다.
 - 기존 업무는 제목에 번호가 있으면 인식합니다. 새 양식에서는 업무 번호 필드가 필수입니다.
 - 중복 번호, 잘못된 형식, 단계와 다른 번호, 제목·본문 번호 불일치는 데이터 추출 검사에서 오류로 처리합니다. 문제를 고치기 전에는 새 배포를 중단하고 기존 공개 페이지를 유지합니다.
-- 업무 단계를 옮길 때는 관리자가 대상 단계의 새 번호를 정하고 제목·업무 번호·연구 단계를 함께 갱신합니다. 이전 번호는 변경 이력에 남기고 재사용하지 않습니다.
+- 관리상 번호 변경이 필요한 경우에는 제목·본문 번호와 관련 참조 문구를 함께 수정하고, 변경 전후 대응표를 남깁니다. 업무 단계를 옮길 때는 연구 단계도 함께 갱신합니다.
+- 번호가 앞선다고 반드시 먼저 완료해야 하는 것은 아닙니다. 실제 일정과 선행 관계는 업무 내용·날짜에서 관리하며 병렬 진행이 가능합니다.
 - 번호가 없는 과거 자료는 호환성을 위해 GitHub Issue 번호로 표시됩니다. 현재 등록된 11개 업무는 모두 새 번호가 지정되어 있습니다.
-- 현재 번호 중복 검사는 `dashboard` 라벨이 붙은 공개 대상 Issue를 기준으로 합니다. 관리자 검토 시 미승인 및 삭제된 업무에서 이미 사용한 번호도 재사용하지 않도록 확인하세요.
+- 현재 번호 중복 검사는 `dashboard` 라벨이 붙은 공개 대상 Issue를 기준으로 합니다. 미승인·삭제된 업무나 변경 전 번호의 재사용 방지는 자동 검사가 아니므로 관리자 검토 시 변경 이력까지 확인해야 합니다.
+
+## 번호 변경 이력 — 2026-10-29
+
+사용자 요청에 따라 기존 업무 순서를 유지하면서 11개 Task 번호를 10단위로 전환했습니다. 아래 **이전 번호는 이력 조회용이며 신규 업무에 재사용하지 않습니다.** GitHub Issue 번호와 URL은 그대로입니다.
+
+| 이전 번호 | 새 번호 | 원본 Issue |
+|---|---|---|
+| 01-001 | 01-010 | #2 |
+| 01-002 | 01-020 | #1 |
+| 02-001 | 02-010 | #3 |
+| 02-002 | 02-020 | #8 |
+| 02-003 | 02-030 | #9 |
+| 02-004 | 02-040 | #10 |
+| 02-005 | 02-050 | #11 |
+| 03-001 | 03-010 | #4 |
+| 03-002 | 03-020 | #5 |
+| 03-003 | 03-030 | #6 |
+| 03-004 | 03-040 | #7 |
 
 ## 검증
 
-`tests/test_task_codes.py`는 코드 형식·단계 일치, 제목/본문 일치, 중복, 정렬, 기존 번호의 안정성 및 원본 Issue 링크 유지를 검사합니다. 기존 일정·진행률·공개 범위 검증도 유지됩니다.
+`tests/test_task_codes.py`는 코드 형식·단계 일치, 제목/본문 일치, 중복, 정렬, 기존 번호의 안정성 및 원본 Issue 링크 유지를 검사합니다. 기존 일정·진행률·공개 범위 검증도 유지됩니다. `010, 015, 020` 같은 간격 번호는 기존 세 자리 코드 검증·정렬을 사용하며, 이번 전환에서 데이터 추출·화면 렌더링 코드는 변경하지 않았습니다.
 
-이 번호 체계는 SkyWater ReRAM MPW 저장소에만 적용했습니다. 다른 프로젝트와 템플릿은 변경하지 않았습니다.
+이 번호 체계와 이번 전환은 SkyWater ReRAM MPW 저장소에만 적용했습니다. 다른 프로젝트와 템플릿은 변경하지 않았습니다.
