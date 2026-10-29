@@ -123,7 +123,7 @@
 @media screen and (min-width:1024px) and (max-width:1200px){
   .site-header,.page-shell,.site-footer{padding-left:32px;padding-right:32px}
   .filter-row{margin-left:auto}
-  .range-options{gap:12px}
+  .range-options{margin-left:auto}
   .metric{padding:23px 18px}
   .panel-heading{align-items:flex-start;flex-wrap:wrap}
 }
