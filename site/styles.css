@@ -114,6 +114,7 @@
   #dialog-title{font-size:32px}
   .detail-grid dt,.detail-progress small,.dialog-updated{font-size:13px}
   .phase-chip,.detail-demo-notice{font-size:14px}
+  .detail-checklist h3{font-size:16px}
   .help-content p{font-size:15px;line-height:1.9}
   .help-content h3{font-size:18px}
   .help-warning{font-size:14px;line-height:1.9}
@@ -122,7 +123,7 @@
 @media screen and (min-width:1024px) and (max-width:1200px){
   .site-header,.page-shell,.site-footer{padding-left:32px;padding-right:32px}
   .filter-row{margin-left:auto}
-  .range-options{margin-left:auto}
+  .range-options{gap:12px}
   .metric{padding:23px 18px}
   .panel-heading{align-items:flex-start;flex-wrap:wrap}
 }
