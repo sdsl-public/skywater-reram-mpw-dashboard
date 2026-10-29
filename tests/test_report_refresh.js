@@ -81,14 +81,20 @@ vm.runInContext(
   sandbox.$ = selector => selector === '#recent-updates' ? tasksElement : element;
   sandbox.tasks = () => Array.from({length:10}, (_,i) => ({
     id:String(i+1), title:'Task '+String(i+1),
+    task_code:'01-'+String(i+1).padStart(3,'0'),
     phase:'01', updated_at:'2026-10-'+String(i+1).padStart(2,'0')+'T10:00:00+09:00'
   }));
   sandbox.phaseById = () => ({});
   sandbox.phaseStyle = () => '';
+  // Load the actual caption helper used by the isolated activity renderer.
+  const captionStart = source.indexOf('  const taskCaption = ');
+  const captionEnd = source.indexOf('\n', captionStart);
+  assert.ok(captionStart >= 0 && captionEnd > captionStart);
+  vm.runInContext(source.slice(captionStart,captionEnd), sandbox);
   vm.runInContext(source.slice(recentStart,start)+'\nrenderRecent();', sandbox);
   assert.equal((tasksElement.innerHTML.match(/class="activity-item"/g)||[]).length,8);
-  assert.match(tasksElement.innerHTML, /Task 10/);
-  assert.match(tasksElement.innerHTML, /Task 3/);
+  assert.match(tasksElement.innerHTML, /01-010 · Task 10/);
+  assert.match(tasksElement.innerHTML, /01-003 · Task 3/);
   assert.doesNotMatch(tasksElement.innerHTML, /Task 2/);
   // A tab left open while a report is uploaded must refresh when revisited
   // and once per minute while visible, without flooding background tabs.
