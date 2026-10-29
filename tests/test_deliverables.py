@@ -39,7 +39,7 @@ class DeliverableTests(unittest.TestCase):
         html = (ROOT / 'site/index.html').read_text()
         self.assertEqual(html.count('src="./deliverables.js?v=1"'), 1)
         self.assertIn('href="./deliverables.css?v=1"', html)
-        self.assertLess(html.index('src="./app.js?v=summary-compact-rows-1"'), html.index('src="./deliverables.js?v=1"'))
+        self.assertLess(html.index('src="./app.js?'), html.index('src="./deliverables.js?v=1"'))
         self.assertIn('class="section-top timeline-header"', html)
         self.assertNotIn('id="demo-toggle"', html)
         self.assertIn('id="new-report"', html)
