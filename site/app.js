@@ -88,15 +88,26 @@
     if (!value || !Number.isFinite(Date.parse(value))) return '미기록';
     return new Intl.DateTimeFormat('ko-KR',{timeZone:config.timezone,month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value))+' KST';
   }
+  // Stable public task codes are separate from GitHub issue numbers and URLs.
+  const validTaskCode = (value,phase) => typeof value==='string' && /^0[0-6]-(?!000)[0-9]{3}$/.test(value) && value.slice(0,2)===phase;
+  const taskLabel = task => task.task_code || (task.number?'#'+task.number:'예시');
+  const taskCaption = task => task.task_code ? `${task.task_code} · ${task.title}` : task.title;
+  const compareTaskCodes = (a,b) => a.phase.localeCompare(b.phase) || (a.task_code||'~').localeCompare(b.task_code||'~') || (a.start||'9999').localeCompare(b.start||'9999') || (a.number||0)-(b.number||0);
   function normalizeTask(raw) {
     const status = Object.hasOwn(statuses,raw.status) ? raw.status : 'planned';
     const end = parseDay(raw.end) ? raw.end : null;
     const start = parseDay(raw.start) ? raw.start : null;
     const valid = !(start && end && start>end);
     const number = Number.isSafeInteger(raw.number) && raw.number>0 ? raw.number : null;
+    const phase = phaseById(raw.phase).id;
+    let title = String(raw.title || '제목 없음').slice(0,300);
+    const legacy = title.match(/^(?:\[([0-9]{2}-[0-9]{3})\]|([0-9]{2}-[0-9]{3}))\s+(.+)$/);
+    const candidate = raw.task_code || (legacy && (legacy[1]||legacy[2]));
+    const task_code = validTaskCode(candidate,phase) ? candidate : null;
+    if(task_code && legacy && (legacy[1]||legacy[2])===task_code)title=legacy[3];
     return {
-      id:String(raw.id || `issue-${number}`).slice(0,100),number,title:String(raw.title || '제목 없음').slice(0,300),
-      phase:phaseById(raw.phase).id,status,kind:raw.kind==='milestone'?'milestone':'task',
+      id:String(raw.id || `issue-${number}`).slice(0,100),number,task_code,title,
+      phase,status,kind:raw.kind==='milestone'?'milestone':'task',
       start:valid?start:null,end:valid?end:null,progress:status==='done'?100:status==='cancelled'?0:Math.max(0,Math.min(99,Number(raw.progress)||0)),
       assignees:Array.isArray(raw.assignees)?raw.assignees.map(String).slice(0,20):[],
       summary:String(raw.summary || '').slice(0,1600),
@@ -105,7 +116,7 @@
       url:number ? `${repositoryUrl}/issues/${number}`:null
     };
   }
-  const realTasks = Array.isArray(source.tasks) ? source.tasks.map(normalizeTask) : [];
+  const realTasks = Array.isArray(source.tasks) ? source.tasks.map(normalizeTask).sort(compareTaskCodes) : [];
   function makeDemo() {
     const base=projectStart;
     // Scale only the explicitly labelled fictional examples across the project window.
@@ -130,7 +141,8 @@
       ['06','신뢰성·어레이 특성 분석',166,179,'planned',0],
       ['06','연구 결과 정리',177,181,'planned',0,'milestone']
     ];
-    return rows.map((r,i)=>normalizeTask({id:`demo-${i}`,title:r[1],phase:r[0],start:dayKey(addDays(base,demoOffset(r[2]))),end:dayKey(addDays(base,demoOffset(r[3]))),status:r[4],progress:r[5],kind:r[6]||'task',assignees:[`sample-${['a','b','c'][i%3]}`],summary:'화면 구성 확인을 위한 예시 업무입니다. 담당자·날짜·진행률은 가상 값이며, 실제 프로젝트 일정이나 공정 제공사의 확정 일정이 아닙니다.',checklist:[{text:'요구사항 및 입력 자료 정리',done:r[5]>=40},{text:'설계·분석 수행',done:r[5]>=80},{text:'결과 검토 및 다음 단계 공유',done:r[5]===100}],updated_at:new Date(+today-(i+1)*3600000).toISOString()}));
+    const sequences = {};
+    return rows.map((r,i)=>normalizeTask({id:`demo-${i}`,task_code:`${r[0]}-${String(sequences[r[0]]=(sequences[r[0]]||0)+1).padStart(3,'0')}`,title:r[1],phase:r[0],start:dayKey(addDays(base,demoOffset(r[2]))),end:dayKey(addDays(base,demoOffset(r[3]))),status:r[4],progress:r[5],kind:r[6]||'task',assignees:[`sample-${['a','b','c'][i%3]}`],summary:'화면 구성 확인을 위한 예시 업무입니다. 담당자·날짜·진행률은 가상 값이며, 실제 프로젝트 일정이나 공정 제공사의 확정 일정이 아닙니다.',checklist:[{text:'요구사항 및 입력 자료 정리',done:r[5]>=40},{text:'설계·분석 수행',done:r[5]>=80},{text:'결과 검토 및 다음 단계 공유',done:r[5]===100}],updated_at:new Date(+today-(i+1)*3600000).toISOString()}));
   }
   const demoTasks=makeDemo();
   const state={demo:new URLSearchParams(location.search).get('demo')==='1'||window.DASHBOARD_PREVIEW===true,view:'timeline',scale:'full',start:projectFirstMonth,expanded:new Set(),query:'',status:'all',owner:'all',sort:'phase'};
@@ -141,7 +153,7 @@
   const statusChip = status => `<span class="status-chip ${status}">${icon(statuses[status].icon)}${statuses[status].label}</span>`;
   const phaseStyle = phase => `--phase-color:${phase.color};--phase-color2:${phase.color2}`;
   function filteredTasks() {
-    return tasks().filter(t => (state.status==='all' || (state.status==='overdue'?isOverdue(t):t.status===state.status)) && (state.owner==='all' || (state.owner==='unassigned'?t.assignees.length===0:t.assignees.includes(state.owner))) && `${t.title} ${t.summary} ${t.number||''} ${phaseById(t.phase).title}`.toLocaleLowerCase().includes(state.query.toLocaleLowerCase()));
+    return tasks().filter(t => (state.status==='all' || (state.status==='overdue'?isOverdue(t):t.status===state.status)) && (state.owner==='all' || (state.owner==='unassigned'?t.assignees.length===0:t.status==='all'?false:t.assignees.includes(state.owner))) && `${t.task_code||''} ${t.title} ${t.summary} ${t.number||''} ${phaseById(t.phase).title}`.toLocaleLowerCase().includes(state.query.toLocaleLowerCase()));
   }
   const hasFilters=()=>Boolean(state.query || state.status!=='all' || state.owner!=='all');
   function renderMetrics() {
@@ -178,7 +190,7 @@
         for(const day of [0,14])ticks.push({left:m.left+day/days*100,width:(day===0?14:length-14)/days*100,label:day===0?'01':'15'});
       }
     } else {
-      for(let day=0;day<days;day+=7){const d=addDays(state.start,day);ticks.push({left:day/days*100,width:Math.min(7,days-day)/days*100,label:state.scale==='week'?`${d.getUTCMonth()+1}/${d.getUTCDate()}`:String(d.getUTCDate()).padStart(2,'0')});}
+      for(let day=0;day<days;day+=7){const d=addDays(state.start,day);ticks.push({left:day/days*100,width:Math.min(7,days-day)/days*100,label:state.scale==='week'?`${d.getUTCMonth()+1}/${d.getDate()}`:String(d.getUTCDate()).padStart(2,'0')});}
     }
     const todayPosition=position(dayKey(today));
     return {end,days,position,months,ticks,todayPosition};
@@ -210,7 +222,7 @@
     if(!span)return '<span class="gantt-unscheduled">일정 미정</span>';
     if(span.off)return '<span class="gantt-unscheduled">표시 기간 밖</span>';
     const milestone=task.kind==='milestone'||!(task.start&&task.end);
-    return `<button type="button" class="task-bar${milestone?' milestone':''}" data-task="${escape(task.id)}" style="left:${span.left}%;width:${span.width}%" title="${escape(task.title)} · ${dateLabel(task.start)} ~ ${dateLabel(task.end)}" aria-label="${escape(task.title)} 상세 보기"><i style="width:${task.progress}%"></i><span>${escape(task.title)}</span></button>`;
+    return `<button type="button" class="task-bar${milestone?' milestone':''}" data-task="${escape(task.id)}" style="left:${span.left}%;width:${span.width}%" title="${escape(taskCaption(task))} · ${dateLabel(task.start)} ~ ${dateLabel(task.end)}" aria-label="${escape(taskCaption(task))} 상세 보기"><i style="width:${task.progress}%"></i><span>${escape(task.title)}</span></button>`;
   }
   function renderTimeline(list) {
     const geo=timeGeometry();
@@ -229,7 +241,7 @@
       let html=`<div class="gantt-row" style="${phaseStyle(phase)}"><button type="button" class="phase-cell" data-phase="${phase.id}" aria-expanded="${expanded}" aria-label="${escape(phase.title)} ${expanded?'접기':'펼치기'}"><span class="phase-number">${phase.id}</span><span class="phase-cell-title"><strong>${escape(phase.title)}</strong><small>${caption}</small></span><svg class="phase-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button><div class="gantt-track">${grid}${phaseBar(phase,group,geo)}</div></div>`;
       if(expanded){
         if(!group.length) html+=`<div class="task-empty-row">이 단계에 등록된 업무가 없습니다.<a href="${repositoryUrl}/issues/new?template=task.yml" target="_blank" rel="noopener noreferrer">GitHub에서 등록 ↗</a></div>`;
-        html+=group.map(t=>`<div class="gantt-row gantt-task-row" style="${phaseStyle(phase)}"><button type="button" class="task-cell" data-task="${escape(t.id)}"><span class="status-symbol ${t.status}">${icon(statuses[t.status].icon)}</span><strong>${escape(t.title)}</strong><span class="task-number">${t.number?'#'+t.number:'예시'}</span></button><div class="gantt-track">${grid}${taskBar(t,geo)}</div></div>`).join('');
+        html+=group.map(t=>`<div class="gantt-row gantt-task-row" style="${phaseStyle(phase)}"><button type="button" class="task-cell" data-task="${escape(t.id)}"><span class="status-symbol ${t.status}">${icon(statuses[t.status].icon)}</span><strong>${escape(t.title)}</strong><span class="task-number">${escape(taskLabel(t))}</span></button><div class="gantt-track">${grid}${taskBar(t,geo)}</div></div>`).join('');
       }
       return html;
     }).join('');
@@ -241,17 +253,17 @@
   function emptyMarkup() {return `<div class="empty-state"><h3>첫 번째 업무를 기다리고 있습니다.</h3><p>GitHub에서 업무를 작성하고 dashboard 라벨을 추가하세요.</p><a class="button button-primary" href="${repositoryUrl}/issues/new?template=task.yml" target="_blank" rel="noopener noreferrer">${icon('plus')}업무 등록</a></div>`;}
   function renderList(list) {
     if(!list.length){$('#list-view').innerHTML=hasFilters()?'':emptyMarkup();return;}
-    const sorted=[...list].sort((a,b)=>a.phase.localeCompare(b.phase)||(a.start||'9999').localeCompare(b.start||'9999')||a.title.localeCompare(b.title));
-    $('#list-view').innerHTML=`<div class="list-wrap"><table class="task-table"><thead><tr><th scope="col">업무</th><th scope="col">연구 단계</th><th scope="col">상태</th><th scope="col">담당자</th><th scope="col">종료일</th><th scope="col">진행률</th></tr></thead><tbody>${sorted.map(t=>`<tr><td><button class="table-task-link" type="button" data-task="${escape(t.id)}">${escape(t.title)}<span class="table-task-id">${t.number?'#'+t.number:'예시 업무'}${t.kind==='milestone'?' · MILESTONE':''}</span></button></td><td>${escape(phaseById(t.phase).title)}</td><td>${statusChip(t.status)}</td><td>${escape(t.assignees.join(', ')||'미지정')}</td><td${isOverdue(t)?' class="overdue-text"':''}>${dateLabel(t.end)}${isOverdue(t)?' · 초과':''}</td><td><div class="table-progress"><i><b style="width:${t.progress}%"></b></i>${t.status==='cancelled'?'—':t.progress+'%'}</div></td></tr>`).join('')}</tbody></table></div>`;
+    const sorted=[...list].sort(compareTaskCodes);
+    $('#list-view').innerHTML=`<div class="list-wrap"><table class="task-table"><thead><tr><th scope="col">업무</th><th scope="col">연구 단계</th><th scope="col">상태</th><th scope="col">담당자</th><th scope="col">종료일</th><th scope="col">진행률</th></tr></thead><tbody>${sorted.map(t=>`<tr><td><button class="table-task-link" type="button" data-task="${escape(t.id)}">${escape(t.title)}<span class="table-task-id">${escape(taskLabel(t))}${t.kind==='milestone'?' · MILESTONE':''}</span></button></td><td>${escape(phaseById(t.phase).title)}</td><td>${statusChip(t.status)}</td><td>${escape(t.assignees.join(', ')||'미지정')}</td><td${isOverdue(t)?' class="overdue-text"':''}>${dateLabel(t.end)}${isOverdue(t)?' · 초과':''}</td><td><div class="table-progress"><i><b style="width:${t.progress}%"></b></i>${t.status==='cancelled'?'—':t.progress+'%'}</div></td></tr>`).join('')}</tbody></table></div>`;
   }
   function renderBoard(list) {
     if(!list.length&&!hasFilters()){$('#board-view').innerHTML=emptyMarkup();return;}
     const keys=['planned','in-progress','review','blocked','done'];if(list.some(t=>t.status==='cancelled'))keys.push('cancelled');
-    $('#board-view').innerHTML=`<div class="board-scroll"><div class="board" style="--columns:${keys.length}">${keys.map(key=>{const items=list.filter(t=>t.status===key);return `<section class="board-column" aria-label="${statuses[key].label}"><div class="board-title"><span class="${key}">${statuses[key].label}</span><b>${items.length}</b></div>${items.length?items.map(t=>`<button type="button" class="task-card" data-task="${escape(t.id)}" style="${phaseStyle(phaseById(t.phase))}"><div class="card-phase">${escape(phaseById(t.phase).title)}</div><strong>${escape(t.title)}</strong><div class="card-foot"><span${isOverdue(t)?' class="overdue-text"':''}>${t.end?dateLabel(t.end,true)+' 마감':'일정 미정'}</span><span class="avatar" title="${escape(t.assignees.join(', ')||'담당자 미지정')}">${escape(t.assignees[0]?.slice(0,2).toUpperCase()||'—')}</span></div></button>`).join(''):'<div class="board-empty">등록된 업무 없음</div>'}</section>`;}).join('')}</div></div>`;
+    $('#board-view').innerHTML=`<div class="board-scroll"><div class="board" style="--columns:${keys.length}">${keys.map(key=>{const items=list.filter(t=>t.status===key);return `<section class="board-column" aria-label="${statuses[key].label}"><div class="board-title"><span class="${key}">${statuses[key].label}</span><b>${items.length}</b></div>${items.length?items.map(t=>`<button type="button" class="task-card" data-task="${escape(t.id)}" style="${phaseStyle(phaseById(t.phase))}"><div class="card-phase">${escape(taskLabel(t))} · ${escape(phaseById(t.phase).title)}</div><strong>${escape(t.title)}</strong><div class="card-foot"><span${isOverdue(t)?' class="overdue-text"':''}>${t.end?dateLabel(t.end,true)+' 마감':'일정 미정'}</span><span class="avatar" title="${escape(t.assignees.join(', ')||'담당자 미지정')}">${escape(t.assignees[0]?.slice(0,2).toUpperCase()||'—')}</span></div></button>`).join(''):'<div class="board-empty">등록된 업무 없음</div>'}</section>`;}).join('')}</div></div>`;
   }
   function renderRecent() {
     const recent=[...tasks()].sort((a,b)=>(Date.parse(b.updated_at)||0)-(Date.parse(a.updated_at)||0)).slice(0,8);
-    $('#recent-updates').innerHTML=recent.length?recent.map(t=>`<button class="activity-item" type="button" data-task="${escape(t.id)}" style="${phaseStyle(phaseById(t.phase))}"><i class="activity-dot"></i><strong>${escape(t.title)}</strong><span>${escape(timestampLabel(t.updated_at))}</span></button>`).join(''):'<div class="activity-empty">실제 업무가 등록되면 최근 수정한 내용이 여기에 표시됩니다.</div>';
+    $('#recent-updates').innerHTML=recent.length?recent.map(t=>`<button class="activity-item" type="button" data-task="${escape(t.id)}" style="${phaseStyle(phaseById(t.phase))}"><i class="activity-dot"></i><strong>${escape(taskCaption(t))}</strong><span>${escape(timestampLabel(t.updated_at))}</span></button>`).join(''):'<div class="activity-empty">실제 업무가 등록되면 최근 수정한 내용이 여기에 표시됩니다.</div>';
   }
   function renderReports() {
     const recent = Array.isArray(reportSource.reports) ? reportSource.reports.slice(0,8) : [];
@@ -326,7 +338,7 @@
   function openTask(id) {
     const task=tasks().find(t=>t.id===id);if(!task)return;
     const phase=phaseById(task.phase);
-    $('#dialog-kicker').textContent=task.number?`ISSUE #${task.number} / TASK DETAIL`:'EXAMPLE / TASK DETAIL';
+    $('#dialog-kicker').textContent=task.number?`TASK ${taskLabel(task)} / TASK DETAIL`:`EXAMPLE ${taskLabel(task)} / TASK DETAIL`;
     const summary=task.summary || '공개 요약이 등록되지 않았습니다. 자세한 내용은 GitHub Issue에서 확인하세요.';
     $('#dialog-content').innerHTML=`${state.demo?'<div class="detail-demo-notice">이 업무는 가상 예시입니다. 실제 프로젝트 데이터가 아닙니다.</div>':''}<div class="dialog-tags"><span class="phase-chip" style="${phaseStyle(phase)}">${phase.id} · ${escape(phase.title)}</span>${statusChip(task.status)}</div><h2 id="dialog-title">${escape(task.title)}</h2><p class="dialog-summary">${escape(summary)}</p><dl class="detail-grid"><div><dt>시작일</dt><dd>${dateLabel(task.start)}</dd></div><div><dt>종료일</dt><dd${isOverdue(task)?' class="overdue-text"':''}>${dateLabel(task.end)}${isOverdue(task)?' · 기한 초과':''}</dd></div><div><dt>담당자</dt><dd>${escape(task.assignees.join(', ')||'미지정')}</dd></div><div><dt>업무 유형</dt><dd>${task.kind==='milestone'?'마일스톤':'일반 업무'}</dd></div></dl><div class="detail-progress"><div><span>진행률</span><strong>${task.status==='cancelled'?'취소 · 집계 제외':task.progress+'%'}</strong></div><div class="detail-progress-track"><i style="width:${task.progress}%"></i></div><small>${task.status==='done'?'Completed 상태로 종료된 업무입니다.':task.progress_source==='checklist'?'체크리스트 완료 비율로 계산합니다.':'등록한 진행률을 사용합니다. 날짜 경과율이 아닙니다.'}</small></div>${task.checklist.length?`<div class="detail-checklist"><h3>체크리스트 · ${task.checklist.filter(t=>t.done).length}/${task.checklist.length}</h3>${task.checklist.map(t=>`<div class="check-item${t.done?' checked':''}">${icon(t.done?'check-circle':'square')}<span>${escape(t.text)}</span></div>`).join('')}</div>`:''}<div class="dialog-actions"><a class="button button-primary" href="${task.url||repositoryUrl+'/issues/new?template=task.yml'}" target="_blank" rel="noopener noreferrer">${icon('github')}${task.url?'GitHub에서 보기·수정':'이 형식으로 실제 업무 등록'}${icon('arrow-up-right')}</a>${task.url?`<button class="button button-outline" type="button" data-copy-issue="${task.number}">${icon('copy')}링크 복사</button>`:''}</div><div class="dialog-updated">최근 수정 ${escape(timestampLabel(task.updated_at))}</div>`;
     $('#task-dialog').showModal();
