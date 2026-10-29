@@ -3,7 +3,7 @@
 
 .project-period{display:table;margin:18px auto 0;padding:8px 16px;border:1px solid #bde8a52e;border-radius:30px;color:#caddbe;font-size:12px;line-height:1.6;letter-spacing:.015em}
 .icon-button:disabled{opacity:.28;cursor:default}
-.gantt[data-scale=full] .gantt-month{justify-content:center;padding-left:5px;white-space:nowrap}
+.gantt[data-scale=full] .gantt-month{justify-content:center;padding-left:5px;padding-right:5px;white-space:nowrap}
 .gantt[data-scale=full] .gantt-tick{font-variant-numeric:tabular-nums}
 .phase-bar strong{flex-shrink:0}
 
@@ -123,8 +123,9 @@
 @media screen and (min-width:1024px) and (max-width:1200px){
   .site-header,.page-shell,.site-footer{padding-left:32px;padding-right:32px}
   .filter-row{margin-left:auto}
-  .range-options{gap:9px;flex-wrap:wrap}
-  .scale-switch button{padding-left:9px;padding-right:9px}
+  .range-options{margin-left:auto}
+  .metric{padding:23px 18px}
+  .panel-heading{align-items:flex-start;flex-wrap:wrap}
 }
 @media screen and (max-width:480px){
   .project-period{font-size:11px;padding:7px 11px;letter-spacing:0}
