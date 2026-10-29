@@ -1,5 +1,5 @@
 name: 프로젝트 업무
-description: 연구 단계, 일정, 상태와 공개 요약을 등록합니다.
+description: 연구 단계, 업무 번호, 일정, 상태와 공개 요약을 등록합니다.
 title: "[TASK] "
 body:
   - type: markdown
@@ -8,6 +8,9 @@ body:
         ## 공개 프로젝트 업무
         이 저장소와 모든 Issue는 공개됩니다. **PDK, 비공개 회로도, 미공개 결과, 비밀번호·토큰은 작성하지 마세요.**
         제출 후 관리자가 `dashboard` 라벨을 추가하면 공개 현황판에 반영됩니다.
+        업무 번호는 `단계번호-세자리 순번`입니다. 예: `02-006`. 같은 단계의 종료된 업무까지 확인하고 다음 번호를 사용하세요.
+        제목도 `[TASK] 02-006 업무명` 형식으로 작성하는 것을 권장합니다. 제목에 번호를 쓰면 아래 업무 번호와 같아야 합니다.
+        기존 번호는 정렬·일정 변경이나 업무 완료 때문에 다시 매기지 않습니다. 중복 번호는 사용할 수 없습니다.
         날짜를 모르면 비워 두세요. 담당자는 등록 후 Assignees에서 지정하세요.
   - type: dropdown
     id: phase
@@ -21,6 +24,14 @@ body:
         - 05 · 테이프아웃·제작
         - 06 · 측정·결과 분석
         - 00 · 미분류
+    validations:
+      required: true
+  - type: input
+    id: task-code
+    attributes:
+      label: 업무 번호
+      description: 선택한 연구 단계와 같은 두 자리 번호 + 하이픈 + 001~999 순번. 기존 번호를 재사용하지 마세요. 자동 발급되지 않습니다.
+      placeholder: "예: 02-006"
     validations:
       required: true
   - type: dropdown
