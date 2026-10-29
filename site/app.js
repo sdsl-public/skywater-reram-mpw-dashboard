@@ -153,7 +153,7 @@
   const statusChip = status => `<span class="status-chip ${status}">${icon(statuses[status].icon)}${statuses[status].label}</span>`;
   const phaseStyle = phase => `--phase-color:${phase.color};--phase-color2:${phase.color2}`;
   function filteredTasks() {
-    return tasks().filter(t => (state.status==='all' || (state.status==='overdue'?isOverdue(t):t.status===state.status)) && (state.owner==='all' || (state.owner==='unassigned'?t.assignees.length===0:t.status==='all'?false:t.assignees.includes(state.owner))) && `${t.task_code||''} ${t.title} ${t.summary} ${t.number||''} ${phaseById(t.phase).title}`.toLocaleLowerCase().includes(state.query.toLocaleLowerCase()));
+    return tasks().filter(t => (state.status==='all' || (state.status==='overdue'?isOverdue(t):t.status===state.status)) && (state.owner==='all' || (state.owner==='unassigned'?t.assignees.length===0:t.assignees.includes(state.owner))) && `${t.task_code||''} ${t.title} ${t.summary} ${t.number||''} ${phaseById(t.phase).title}`.toLocaleLowerCase().includes(state.query.toLocaleLowerCase()));
   }
   const hasFilters=()=>Boolean(state.query || state.status!=='all' || state.owner!=='all');
   function renderMetrics() {
@@ -190,7 +190,7 @@
         for(const day of [0,14])ticks.push({left:m.left+day/days*100,width:(day===0?14:length-14)/days*100,label:day===0?'01':'15'});
       }
     } else {
-      for(let day=0;day<days;day+=7){const d=addDays(state.start,day);ticks.push({left:day/days*100,width:Math.min(7,days-day)/days*100,label:state.scale==='week'?`${d.getUTCMonth()+1}/${d.getDate()}`:String(d.getUTCDate()).padStart(2,'0')});}
+      for(let day=0;day<days;day+=7){const d=addDays(state.start,day);ticks.push({left:day/days*100,width:Math.min(7,days-day)/days*100,label:state.scale==='week'?`${d.getUTCMonth()+1}/${d.getUTCDate()}`:String(d.getUTCDate()).padStart(2,'0')});}
     }
     const todayPosition=position(dayKey(today));
     return {end,days,position,months,ticks,todayPosition};
